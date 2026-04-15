@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>test</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: rgba(15, 23, 42, 0.92);
+      --panel-2: #111827;
+      --input: #0b1220;
+      --border: #243247;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+      --accent-2: #16a34a;
+      --danger: #ef4444;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 14px;
+      padding-bottom: 94px;
+    }
+
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero {
+      background: linear-gradient(180deg, rgba(17,24,39,0.96) 0%, rgba(15,23,42,0.96) 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(1.6rem, 4vw, 2.25rem);
+      margin-bottom: 8px;
+    }
+    h2 {
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+    }
+    h3 {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .subtext {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.95rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .stat {
+      background: rgba(11, 18, 32, 0.88);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.76rem;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .button-grid-3,
+    .button-grid-2 {
+      display: grid;
+      gap: 10px;
+    }
+
+    .button-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .button-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .preset-btn,
+    .chip,
+    .step-btn,
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .preset-btn,
+    .chip {
+      border: 1px solid var(--border);
+      background: var(--input);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px;
+      cursor: pointer;
+      min-height: 48px;
+      text-align: center;
+    }
+
+    .preset-btn small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+
+    .preset-btn.active,
+    .chip.active {
+      border-color: var(--accent);
+      background: rgba(34, 197, 94, 0.12);
+      box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.22);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 50px;
+      background: var(--input);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 13px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.14);
+    }
+
+    .stepper {
+      display: grid;
+      grid-template-columns: 44px 1fr 44px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .step-btn {
+      min-height: 50px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #152133;
+      color: var(--text);
+      font-size: 1.2rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .stepper input { text-align: center; }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    button {
+      min-height: 48px;
+      border-radius: 14px;
+      border: none;
+      padding: 12px 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
+      color: #052e16;
+      flex: 1 1 180px;
+    }
+
+    .secondary {
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+      margin-top: 4px;
+    }
+
+    .exercise-recommendation {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .tool-buttons {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .hidden-input {
+      display: none;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .log-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .log-card {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .log-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .log-title {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .log-sub {
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+
+    .tag {
+      display: inline-block;
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.24);
+      color: #dcfce7;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .meta-box {
+      background: #0d1728;
+      border: 1px solid #21314a;
+      border-radius: 12px;
+      padding: 9px 10px;
+    }
+
+    .meta-label {
+      color: var(--muted);
+      font-size: 0.72rem;
+      margin-bottom: 4px;
+    }
+
+    .meta-value {
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .empty {
+      color: var(--muted);
+      padding: 12px 0 2px;
+    }
+
+    .sticky-bar {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      z-index: 20;
+      display: none;
+      gap: 10px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 10px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .sticky-bar button { flex: 1; }
+
+    @media (max-width: 980px) {
+      .grid,
+      .stats,
+      .filter-grid,
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sticky-bar { display: flex; }
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 10px; padding-bottom: 92px; }
+      .form-grid,
+      .button-grid-3,
+      .button-grid-2 { grid-template-columns: 1fr; }
+      .hero,
+      .card { padding: 14px; border-radius: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="hero">
+      <h1>Workout Tracker Test</h1>
+      <p class="subtext">Flexible logging for your shift schedule. Pick any day, any workout type, and save strength work, circuits, bike rides, recovery, or custom sessions fast.</p>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Total Entries</div>
+          <div class="stat-value" id="totalEntries">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Unique Exercises</div>
+          <div class="stat-value" id="uniqueExercises">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Latest Body Weight</div>
+          <div class="stat-value" id="latestBodyWeight">—</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Latest Waist</div>
+          <div class="stat-value" id="latestWaist">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="stack">
+        <div class="card">
+          <h2>Quick Fill</h2>
+          <p class="section-note">Choose a day type first, then tap any workout. You are not locked into a fixed schedule.</p>
+
+          <h3>Day Type</h3>
+          <div class="button-grid-3" id="dayButtons">
+            <button class="preset-btn" type="button" onclick="setDayOnly('AM Shift', this)">AM Shift</button>
+            <button class="preset-btn" type="button" onclick="setDayOnly('PM Shift', this)">PM Shift</button>
+            <button class="preset-btn active" type="button" onclick="setDayOnly('Off Day', this)">Off Day</button>
+          </div>
+
+          <h3 style="margin-top:14px;">Workout Type</h3>
+          <div class="button-grid-3" id="workoutButtons">
+            <button class="preset-btn" type="button" onclick="presetWorkout('Push','Bench Press', this)">Push<small>Bench / presses / curls</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Pull','Deadlift', this)">Pull<small>Deadlift / rows</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Legs','Squat', this)">Legs<small>Squat / glutes</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Hypertrophy','Incline DB Press', this)">Hypertrophy<small>Volume + arms</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Circuit','Circuit', this)">Circuit<small>KB / sled / ropes</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Cardio','Stationary Bike', this)">Bike / Cardio<small>Bike / Zone 2</small></button>
+            <button class="preset-btn active" type="button" onclick="presetWorkout('Custom','', this)">Custom<small>Anything you want</small></button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Add Entry</h2>
+          <form id="entryForm">
+            <div class="form-grid">
+              <div>
+                <label for="date">Date</label>
+                <input type="date" id="date" required />
+              </div>
+              <div>
+                <label for="day">Day</label>
+                <select id="day">
+                  <option>AM Shift</option>
+                  <option>PM Shift</option>
+                  <option>Off Day</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="type">Workout Type</label>
+                <select id="type">
+                  <option>Push</option>
+                  <option>Pull</option>
+                  <option>Legs</option>
+                  <option>Hypertrophy</option>
+                  <option>Circuit</option>
+                  <option>Cardio</option>
+                  <option>Recovery</option>
+                  <option selected>Custom</option>
+                </select>
+              </div>
+              <div>
+                <label>Quick Exercise Picks</label>
+                <div class="chips" id="exerciseChips"></div>
+              </div>
+
+              <div class="full">
+                <label for="exercise">Exercise</label>
+                <input id="exercise" list="exerciseList" placeholder="Exercise" />
+                <div id="exerciseRecommendation" class="exercise-recommendation"></div>
+                <datalist id="exerciseList">
+                  <option value="Bench Press"></option>
+                  <option value="Overhead Press"></option>
+                  <option value="Incline DB Press"></option>
+                  <option value="Deadlift"></option>
+                  <option value="Weighted Pull-Ups"></option>
+                  <option value="Barbell Rows"></option>
+                  <option value="Face Pulls"></option>
+                  <option value="Barbell Curls"></option>
+                  <option value="Incline DB Curls"></option>
+                  <option value="Hammer Curls"></option>
+                  <option value="Skull Crushers"></option>
+                  <option value="Triceps Pushdown"></option>
+                  <option value="Overhead Triceps Extension"></option>
+                  <option value="Chest Fly"></option>
+                  <option value="Lateral Raises"></option>
+                  <option value="DB Shoulder Press"></option>
+                  <option value="Squat"></option>
+                  <option value="Romanian Deadlift"></option>
+                  <option value="Hip Thrust"></option>
+                  <option value="Walking Lunges"></option>
+                  <option value="Leg Curl"></option>
+                  <option value="Circuit"></option>
+                  <option value="Kettlebell Swings"></option>
+                  <option value="Sled Push"></option>
+                  <option value="Battle Ropes"></option>
+                  <option value="Stationary Bike"></option>
+                  <option value="Zone 2 Bike"></option>
+                  <option value="Walk"></option>
+                  <option value="Mobility"></option>
+                </datalist>
+              </div>
+
+              <div>
+                <label for="weight">Weight Used (lb)</label>
+                <div class="stepper">
+                  <button class="step-btn" type="button" data-target="weight" data-step="-5">−</button>
+                  <input id="weight" type="number" placeholder="185" inputmode="decimal" />
+                  <button class="step-btn" type="button" data-target="weight" data-step="5">+</button>
+                </div>
+              </div>
+
+              <div>
+                <label for="sets">Sets</label>
+                <input id="sets" type="number" placeholder="3" />
+              </div>
+              <div>
+                <label for="reps">Reps</label>
+                <input id="reps" type="number" placeholder="10" />
+              </div>
+
+              <div>
+                <label for="duration">Duration (min)</label>
+                <div class="stepper">
+                  <button class="step-btn" type="button" data-target="duration" data-step="-5">−</button>
+                  <input id="duration" type="number" placeholder="20" inputmode="numeric" />
+                  <button class="step-btn" type="button" data-target="duration" data-step="5">+</button>
+                </div>
+              </div>
+
+              <div>
+                <label for="distance">Distance</label>
+                <input id="distance" placeholder="2.0 mi or 10 miles bike" />
+              </div>
+
+              <div>
+                <label for="body">Body Weight (lb)</label>
+                <div class="stepper">
+                  <button class="step-btn" type="button" data-target="body" data-step="-1">−</button>
+                  <input id="body" type="number" placeholder="225" inputmode="decimal" />
+                  <button class="step-btn" type="button" data-target="body" data-step="1">+</button>
+                </div>
+              </div>
+
+              <div>
+                <label for="waist">Waist (in)</label>
+                <div class="stepper">
+                  <button class="step-btn" type="button" data-target="waist" data-step="-0.5">−</button>
+                  <input id="waist" type="number" placeholder="43.5" inputmode="decimal" />
+                  <button class="step-btn" type="button" data-target="waist" data-step="0.5">+</button>
+                </div>
+              </div>
+
+              <div class="full">
+                <label for="notes">Notes</label>
+                <textarea id="notes" placeholder="Energy, glucose, shift notes, soreness, meals, or anything important"></textarea>
+              </div>
+            </div>
+
+            <div class="action-row">
+              <button class="primary" type="submit">Save Entry</button>
+              <button class="secondary" type="button" id="clearForm">Clear Form</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <h2>Tools</h2>
+          <div class="tool-buttons">
+            <button class="secondary" type="button" id="useToday">Use Today</button>
+            <button class="secondary" type="button" id="copyLastBody">Copy Last Body Weight</button>
+            <button class="secondary" type="button" id="copyLastWaist">Copy Last Waist</button>
+            <button class="secondary" type="button" id="importStepsCsv">Import Steps CSV</button>
+            <button class="secondary" type="button" id="exportCsv">Export CSV</button>
+            <button class="danger" type="button" id="clearAll">Delete All Entries</button>
+            <input class="hidden-input" type="file" id="stepsCsvFile" accept=".csv,text/csv" />
+          </div>
+          <p class="helper">Everything saves in your browser on this device.</p>
+        </div>
+
+        <div class="card">
+          <h2>Log Filters</h2>
+          <div class="filter-grid">
+            <div>
+              <label for="search">Search</label>
+              <input id="search" placeholder="Exercise or notes" />
+            </div>
+            <div>
+              <label for="filterDay">Day</label>
+              <select id="filterDay">
+                <option value="">All</option>
+                <option>AM Shift</option>
+                <option>PM Shift</option>
+                <option>Off Day</option>
+              </select>
+            </div>
+            <div>
+              <label for="filterType">Type</label>
+              <select id="filterType">
+                <option value="">All</option>
+                <option>Push</option>
+                <option>Pull</option>
+                <option>Legs</option>
+                <option>Hypertrophy</option>
+                <option>Circuit</option>
+                <option>Cardio</option>
+                <option>Recovery</option>
+                <option>Custom</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Workout Log</h2>
+      <div id="log"></div>
+    </div>
+  </div>
+
+  <div class="sticky-bar">
+    <button class="primary" type="submit" form="entryForm">Save Entry</button>
+    <button class="secondary" type="button" id="stickyClear">Clear</button>
+  </div>
+
+  <script>
+    const KEY = 'tracker';
+
+    const exerciseMap = {
+      Push: ['Bench Press', 'Overhead Press', 'Incline DB Press', 'Lateral Raises', 'Triceps Pushdown'],
+      Pull: ['Deadlift', 'Weighted Pull-Ups', 'Barbell Rows', 'Face Pulls', 'Barbell Curls'],
+      Legs: ['Squat', 'Romanian Deadlift', 'Hip Thrust', 'Walking Lunges', 'Leg Curl'],
+      Hypertrophy: ['Incline DB Press', 'Chest Fly', 'DB Shoulder Press', 'Lateral Raises', 'Skull Crushers', 'Triceps Pushdown', 'Incline DB Curls', 'Hammer Curls'],
+      Circuit: ['Kettlebell Swings', 'Sled Push', 'Battle Ropes', 'Circuit'],
+      Cardio: ['Stationary Bike', 'Zone 2 Bike', 'Walk'],
+      Recovery: ['Walk', 'Mobility'],
+      Custom: ['Bench Press', 'Deadlift', 'Squat', 'Incline DB Press', 'Hip Thrust', 'Stationary Bike', 'Skull Crushers', 'Incline DB Curls']
+    };
+
+    const dateEl = document.getElementById('date');
+    const dayEl = document.getElementById('day');
+    const typeEl = document.getElementById('type');
+    const exerciseEl = document.getElementById('exercise');
+    const exerciseRecommendationEl = document.getElementById('exerciseRecommendation');
+    const weightEl = document.getElementById('weight');
+    const setsEl = document.getElementById('sets');
+    const repsEl = document.getElementById('reps');
+    const durationEl = document.getElementById('duration');
+    const distanceEl = document.getElementById('distance');
+    const bodyEl = document.getElementById('body');
+    const waistEl = document.getElementById('waist');
+    const notesEl = document.getElementById('notes');
+    const logEl = document.getElementById('log');
+    const chipsEl = document.getElementById('exerciseChips');
+    const importStepsCsvBtn = document.getElementById('importStepsCsv');
+    const stepsCsvFileEl = document.getElementById('stepsCsvFile');
+    function getExerciseRecommendations() {
+      return {
+        'Bench Press': { sets: 4, reps: 5 },
+        'Overhead Press': { sets: 3, reps: 6 },
+        'Incline DB Press': { sets: 4, reps: 10 },
+        'Deadlift': { sets: 4, reps: 4 },
+        'Weighted Pull-Ups': { sets: 3, reps: 5 },
+        'Assisted Pull-Ups': { sets: 3, reps: 8 },
+        'Barbell Rows': { sets: 3, reps: 8 },
+        'Face Pulls': { sets: 3, reps: 15 },
+        'Squat': { sets: 4, reps: 5 },
+        'Romanian Deadlift': { sets: 3, reps: 8 },
+        'Hip Thrust': { sets: 3, reps: 10 },
+        'Walking Lunges': { sets: 3, reps: 12 },
+        'Leg Curl': { sets: 3, reps: 12 },
+        'DB Shoulder Press': { sets: 3, reps: 10 },
+        'Lateral Raises': { sets: 3, reps: 15 },
+        'Chest Fly': { sets: 3, reps: 12 },
+        'Skull Crushers': { sets: 3, reps: 12 },
+        'Triceps Pushdown': { sets: 3, reps: 12 },
+        'Overhead Triceps Extension': { sets: 2, reps: 12 },
+        'Incline DB Curls': { sets: 3, reps: 12 },
+        'Hammer Curls': { sets: 3, reps: 12 }
+      };
+    }
+
+    function updateExerciseRecommendation(exercise) {
+      const recommendations = getExerciseRecommendations();
+      if (recommendations[exercise]) {
+        const rec = recommendations[exercise];
+        exerciseRecommendationEl.textContent = `Recommended: ${rec.sets} sets × ${rec.reps} reps`;
+      } else {
+        exerciseRecommendationEl.textContent = '';
+      }
+    }
+
+
+    function todayString() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset();
+      return new Date(now.getTime() - offset * 60000).toISOString().split('T')[0];
+    }
+
+    function load() {
+      try {
+        return JSON.parse(localStorage.getItem(KEY) || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function saveEntries(data) {
+      localStorage.setItem(KEY, JSON.stringify(data));
+    }
+
+    function formatValue(value, suffix = '') {
+      return value !== '' && value !== null && value !== undefined ? `${value}${suffix}` : '—';
+    }
+
+    function updateStats(data) {
+      document.getElementById('totalEntries').textContent = data.length;
+      document.getElementById('uniqueExercises').textContent = new Set(data.map(d => (d.ex || '').trim().toLowerCase()).filter(Boolean)).size;
+
+      const latestBody = [...data].reverse().find(d => d.bw !== '');
+      const latestWaist = [...data].reverse().find(d => d.wa !== '');
+      document.getElementById('latestBodyWeight').textContent = latestBody ? `${latestBody.bw} lb` : '—';
+      document.getElementById('latestWaist').textContent = latestWaist ? `${latestWaist.wa} in` : '—';
+    }
+
+    function updateExerciseChips() {
+      const type = typeEl.value;
+      const list = exerciseMap[type] || [];
+      chipsEl.innerHTML = list.map(item => `<button type="button" class="chip" data-exercise="${item}">${item}</button>`).join('');
+    }
+
+    function clearActive(groupId) {
+      const group = document.getElementById(groupId);
+      if (!group) return;
+      group.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+    }
+
+    function setDayOnly(day, btn) {
+      dayEl.value = day;
+      clearActive('dayButtons');
+      if (btn) btn.classList.add('active');
+    }
+
+    function presetWorkout(type, exercise, btn) {
+      typeEl.value = type;
+      exerciseEl.value = exercise;
+      updateExerciseChips();
+
+      const recommendations = getExerciseRecommendations();
+
+      if (recommendations[exercise]) {
+        setsEl.value = recommendations[exercise].sets;
+        repsEl.value = recommendations[exercise].reps;
+      }
+      updateExerciseRecommendation(exercise);
+
+      if (type === 'Hypertrophy') {
+        notesEl.value = 'Template: Incline DB Press, Chest Fly, DB Shoulder Press, Lateral Raises, Skull Crushers or Triceps Pushdown, Incline DB Curls, Hammer Curls';
+      }
+
+      clearActive('workoutButtons');
+      if (btn) btn.classList.add('active');
+    }
+
+    function resetForm() {
+      dateEl.value = todayString();
+      dayEl.value = 'Off Day';
+      typeEl.value = 'Custom';
+      exerciseEl.value = '';
+      weightEl.value = '';
+      setsEl.value = '';
+      repsEl.value = '';
+      durationEl.value = '';
+      distanceEl.value = '';
+      bodyEl.value = '';
+      waistEl.value = '';
+      notesEl.value = '';
+      exerciseRecommendationEl.textContent = '';
+      updateExerciseChips();
+      clearActive('dayButtons');
+      document.querySelector('#dayButtons .preset-btn:last-child')?.classList.add('active');
+      clearActive('workoutButtons');
+      document.querySelector('#workoutButtons .preset-btn:last-child')?.classList.add('active');
+    }
+
+    function parseCsvLine(line) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        const next = line[i + 1];
+
+        if (char === '"') {
+          if (inQuotes && next === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+
+      result.push(current.trim());
+      return result;
+    }
+
+    function normalizeHeader(value) {
+      return String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
+    function importStepsCsvText(text) {
+      const lines = text.split(/\r?\n/).filter(line => line.trim());
+      if (lines.length < 2) {
+        alert('CSV file looks empty.');
+        return;
+      }
+
+      const headers = parseCsvLine(lines[0]).map(normalizeHeader);
+      const dateIndex = headers.findIndex(h => ['date', 'day', 'startdate'].includes(h));
+      const stepsIndex = headers.findIndex(h => ['steps', 'stepcount', 'count'].includes(h));
+
+      if (dateIndex === -1 || stepsIndex === -1) {
+        alert('Could not find date and steps columns in this CSV.');
+        return;
+      }
+
+      const existing = load();
+      let importedCount = 0;
+
+      for (let i = 1; i < lines.length; i++) {
+        const cols = parseCsvLine(lines[i]);
+        const rawDate = cols[dateIndex];
+        const rawSteps = cols[stepsIndex];
+        if (!rawDate || !rawSteps) continue;
+
+        const parsedDate = new Date(rawDate);
+        if (Number.isNaN(parsedDate.getTime())) continue;
+
+        const offset = parsedDate.getTimezoneOffset();
+        const date = new Date(parsedDate.getTime() - offset * 60000).toISOString().split('T')[0];
+        const stepsValue = String(rawSteps).replace(/[^0-9]/g, '');
+        if (!stepsValue) continue;
+
+        const duplicate = existing.some(entry => entry.date === date && entry.type === 'Cardio' && entry.ex === 'Imported Steps');
+        if (duplicate) continue;
+
+        existing.push({
+          id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random() + i),
+          date,
+          day: 'Off Day',
+          type: 'Cardio',
+          ex: 'Imported Steps',
+          w: '',
+          r: '',
+          du: '',
+          di: '',
+          bw: '',
+          wa: '',
+          n: `Imported steps: ${stepsValue}`,
+          steps: stepsValue
+        });
+        importedCount++;
+      }
+
+      saveEntries(existing);
+      render();
+      alert(importedCount ? `Imported ${importedCount} step entries.` : 'No new step entries were imported.');
+    }
+
+    function render() {
+      const data = load();
+      updateStats(data);
+
+      const search = document.getElementById('search').value.trim().toLowerCase();
+      const filterDay = document.getElementById('filterDay').value;
+      const filterType = document.getElementById('filterType').value;
+
+      const filtered = [...data].reverse().filter(d => {
+        const haystack = [d.ex, d.n, d.type, d.day, d.steps].join(' ').toLowerCase();
+        const matchSearch = !search || haystack.includes(search);
+        const matchDay = !filterDay || d.day === filterDay;
+        const matchType = !filterType || d.type === filterType;
+        return matchSearch && matchDay && matchType;
+      });
+
+      if (!filtered.length) {
+        logEl.innerHTML = '<div class="empty">No entries yet. Add your first workout above.</div>';
+        return;
+      }
+
+      logEl.innerHTML = `<div class="log-list">${filtered.map(d => `
+        <div class="log-card">
+          <div class="log-top">
+            <div>
+              <div class="log-title">${d.ex || 'No exercise entered'}</div>
+              <div class="log-sub">${d.date} · ${d.day}</div>
+            </div>
+            <span class="tag">${d.type || 'Custom'}</span>
+          </div>
+          <div class="meta-grid">
+            <div class="meta-box"><div class="meta-label">Weight</div><div class="meta-value">${formatValue(d.w, ' lb')}</div></div>
+            <div class="meta-box"><div class="meta-label">Sets</div><div class="meta-value">${formatValue(d.sets)}</div></div>
+            <div class="meta-box"><div class="meta-label">Reps</div><div class="meta-value">${formatValue(d.r)}</div></div>
+            <div class="meta-box"><div class="meta-label">Duration</div><div class="meta-value">${formatValue(d.du, ' min')}</div></div>
+            <div class="meta-box"><div class="meta-label">Distance</div><div class="meta-value">${formatValue(d.di)}</div></div>
+            <div class="meta-box"><div class="meta-label">Body Weight</div><div class="meta-value">${formatValue(d.bw, ' lb')}</div></div>
+            <div class="meta-box"><div class="meta-label">Waist</div><div class="meta-value">${formatValue(d.wa, ' in')}</div></div>
+            <div class="meta-box"><div class="meta-label">Steps</div><div class="meta-value">${formatValue(d.steps)}</div></div>
+          </div>
+          ${d.n ? `<div class="helper" style="margin-top:10px;">Notes: ${d.n}</div>` : ''}
+          <div class="action-row" style="margin-top:12px;">
+            <button class="danger" type="button" onclick="deleteEntry('${d.id}')">Delete</button>
+          </div>
+        </div>
+      `).join('')}</div>`;
+    }
+
+    document.getElementById('entryForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = load();
+      data.push({
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+        date: dateEl.value,
+        day: dayEl.value,
+        type: typeEl.value,
+        ex: exerciseEl.value,
+        w: weightEl.value,
+        sets: setsEl.value,
+        r: repsEl.value,
+        du: durationEl.value,
+        di: distanceEl.value,
+        bw: bodyEl.value,
+        wa: waistEl.value,
+        n: notesEl.value,
+        steps: ''
+      });
+      saveEntries(data);
+      exerciseEl.value = '';
+      weightEl.value = '';
+      setsEl.value = '';
+      repsEl.value = '';
+      durationEl.value = '';
+      distanceEl.value = '';
+      notesEl.value = '';
+      render();
+    });
+
+    document.getElementById('clearForm').addEventListener('click', resetForm);
+    document.getElementById('stickyClear').addEventListener('click', resetForm);
+    document.getElementById('useToday').addEventListener('click', () => { dateEl.value = todayString(); });
+
+    document.getElementById('copyLastBody').addEventListener('click', () => {
+      const last = [...load()].reverse().find(d => d.bw !== '');
+      if (last) bodyEl.value = last.bw;
+    });
+
+    document.getElementById('copyLastWaist').addEventListener('click', () => {
+      const last = [...load()].reverse().find(d => d.wa !== '');
+      if (last) waistEl.value = last.wa;
+    });
+
+    importStepsCsvBtn.addEventListener('click', () => {
+      stepsCsvFileEl.click();
+    });
+
+    stepsCsvFileEl.addEventListener('change', async (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const text = await file.text();
+      importStepsCsvText(text);
+      stepsCsvFileEl.value = '';
+    });
+
+    document.getElementById('clearAll').addEventListener('click', () => {
+      if (!window.confirm('Delete all workout entries? This cannot be undone.')) return;
+      localStorage.removeItem(KEY);
+      render();
+    });
+
+    document.getElementById('exportCsv').addEventListener('click', () => {
+      const data = load();
+      if (!data.length) {
+        alert('No entries to export yet.');
+        return;
+      }
+      const headers = ['Date', 'Day', 'Type', 'Exercise', 'Weight', 'Sets', 'Reps', 'Duration', 'Distance', 'Body Weight', 'Waist', 'Notes'];
+      const rows = data.map(d => [d.date, d.day, d.type, d.ex, d.w, d.sets, d.r, d.du, d.di, d.bw, d.wa, d.n]);
+      const csv = [headers, ...rows]
+        .map(row => row.map(value => `"${String(value ?? '').replaceAll('"', '""')}"`).join(','))
+        .join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'workout-tracker.csv';
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.querySelectorAll('[data-target]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById(btn.dataset.target);
+        const step = parseFloat(btn.dataset.step);
+        const current = parseFloat(input.value || '0');
+        const next = Math.max(0, current + step);
+        input.value = Number.isInteger(next) ? String(next) : next.toFixed(1).replace(/\.0$/, '');
+      });
+    });
+
+chipsEl.addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  const exercise = chip.dataset.exercise;
+  exerciseEl.value = exercise;
+
+  const recommendations = getExerciseRecommendations();
+
+  if (recommendations[exercise]) {
+    setsEl.value = recommendations[exercise].sets;
+    repsEl.value = recommendations[exercise].reps;
+  }
+  updateExerciseRecommendation(exercise);
+
+  chipsEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+});
+
+    exerciseEl.addEventListener('input', () => {
+      updateExerciseRecommendation(exerciseEl.value);
+    });
+    typeEl.addEventListener('change', updateExerciseChips);
+    document.getElementById('search').addEventListener('input', render);
+    document.getElementById('filterDay').addEventListener('change', render);
+    document.getElementById('filterType').addEventListener('change', render);
+
+    window.deleteEntry = function(id) {
+      const data = load().filter(d => d.id !== id);
+      saveEntries(data);
+      render();
+    };
+
+    dateEl.value = todayString();
+    dayEl.value = 'Off Day';
+    typeEl.value = 'Custom';
+    updateExerciseChips();
+    presetWorkout('Custom', '', document.querySelector('#workoutButtons .preset-btn.active'));
+    render();
+  </script>
+</body>
+</html>
