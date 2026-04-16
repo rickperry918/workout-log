@@ -177,6 +177,9 @@
     }
 
     .full { grid-column: 1 / -1; }
+    .hidden {
+      display: none !important;
+    }
 
     label {
       display: block;
@@ -578,7 +581,7 @@
               </div>
 
 
-              <div>
+              <div id="durationWrap" class="hidden">
                 <label for="duration">Duration (min)</label>
                 <div class="stepper">
                   <button class="step-btn" type="button" data-target="duration" data-step="-5">−</button>
@@ -587,7 +590,7 @@
                 </div>
               </div>
 
-              <div>
+              <div id="distanceWrap" class="hidden">
                 <label for="distance">Distance</label>
                 <input id="distance" placeholder="2.0 mi or 10 miles bike" />
               </div>
@@ -803,6 +806,18 @@
     const repsEl = document.getElementById('reps');
     const durationEl = document.getElementById('duration');
     const distanceEl = document.getElementById('distance');
+    const durationWrapEl = document.getElementById('durationWrap');
+    const distanceWrapEl = document.getElementById('distanceWrap');
+    function updateConditionalFields(type) {
+      const showCardioFields = type === 'Cardio';
+      durationWrapEl.classList.toggle('hidden', !showCardioFields);
+      distanceWrapEl.classList.toggle('hidden', !showCardioFields);
+
+      if (!showCardioFields) {
+        durationEl.value = '';
+        distanceEl.value = '';
+      }
+    }
     const bodyEl = document.getElementById('body');
     const waistEl = document.getElementById('waist');
     const glucosePreEl = document.getElementById('glucosePre');
@@ -1008,6 +1023,7 @@
       notesEl.value = draft.n || '';
       updateExerciseChips();
       updateWorkoutPreview(typeEl.value);
+      updateConditionalFields(typeEl.value);
       updateExerciseRecommendation(exerciseEl.value);
       updateExerciseHistory(exerciseEl.value);
       updateSetHistory(exerciseEl.value);
@@ -1067,6 +1083,7 @@
       exerciseEl.value = exercise;
       updateExerciseChips();
       updateWorkoutPreview(type);
+      updateConditionalFields(type);
 
       const recommendations = getExerciseRecommendations();
 
@@ -1117,6 +1134,7 @@
       set4HistoryEl.textContent = '';
       updateExerciseChips();
       updateWorkoutPreview('Custom');
+      updateConditionalFields('Custom');
       clearActive('dayButtons');
       document.querySelector('#dayButtons .preset-btn:last-child')?.classList.add('active');
       clearActive('workoutButtons');
@@ -1431,6 +1449,7 @@ chipsEl.addEventListener('click', (e) => {
     typeEl.addEventListener('change', () => {
       updateExerciseChips();
       updateWorkoutPreview(typeEl.value);
+      updateConditionalFields(typeEl.value);
     });
     document.getElementById('search').addEventListener('input', render);
     document.getElementById('filterDay').addEventListener('change', render);
@@ -1447,6 +1466,7 @@ chipsEl.addEventListener('click', (e) => {
     typeEl.value = 'Custom';
     updateExerciseChips();
     updateWorkoutPreview('Custom');
+    updateConditionalFields('Custom');
     presetWorkout('Custom', '', document.querySelector('#workoutButtons .preset-btn.active'));
     applyDraft(loadDraft());
     setupDraftAutosave();
