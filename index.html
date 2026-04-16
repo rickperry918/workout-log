@@ -457,7 +457,7 @@
             <button class="preset-btn" type="button" onclick="presetWorkout('Pull','Deadlift', this)">Pull<small>Deadlift / rows</small></button>
             <button class="preset-btn" type="button" onclick="presetWorkout('Legs','Squat', this)">Legs<small>Squat / glutes</small></button>
             <button class="preset-btn" type="button" onclick="presetWorkout('Hypertrophy','Incline DB Press', this)">Hypertrophy<small>Volume + arms</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Circuit','Circuit', this)">Circuit<small>KB / sled / ropes</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Circuit','Kettlebell Swings', this)">Circuit<small>KB / sled / ropes</small></button>
             <button class="preset-btn" type="button" onclick="presetWorkout('Cardio','Stationary Bike', this)">Bike / Cardio<small>Bike / Zone 2</small></button>
             <button class="preset-btn active" type="button" onclick="presetWorkout('Custom','', this)">Custom<small>Anything you want</small></button>
           </div>
@@ -528,10 +528,13 @@
                   <option value="Hip Thrust"></option>
                   <option value="Walking Lunges"></option>
                   <option value="Leg Curl"></option>
-                  <option value="Circuit"></option>
                   <option value="Kettlebell Swings"></option>
                   <option value="Sled Push"></option>
                   <option value="Battle Ropes"></option>
+                  <option value="Farmer Carry"></option>
+                  <option value="Sandbag Carry"></option>
+                  <option value="Loaded Step-Up"></option>
+                  <option value="Box Jumps"></option>
                   <option value="Stationary Bike"></option>
                   <option value="Zone 2 Bike"></option>
                   <option value="Walk"></option>
@@ -554,7 +557,7 @@
               </div>
               <div>
                 <label for="reps">Reps</label>
-                <input id="reps" type="text" placeholder="4-6" inputmode="text" />
+                <input id="reps" type="text" placeholder="Rep range" inputmode="text" />
               </div>
 
               <div>
@@ -669,10 +672,10 @@
 
     const exerciseMap = {
       Push: ['Bench Press', 'Overhead Press', 'Incline DB Press', 'Lateral Raises', 'Triceps Pushdown'],
-      Pull: ['Deadlift', 'Weighted Pull-Ups', 'Barbell Rows', 'Face Pulls', 'Barbell Curls'],
+      Pull: ['Deadlift', 'Assisted Pull-Ups', 'Barbell Rows', 'Face Pulls', 'Barbell Curls'],
       Legs: ['Squat', 'Romanian Deadlift', 'Hip Thrust', 'Walking Lunges', 'Leg Curl'],
       Hypertrophy: ['Incline DB Press', 'Chest Fly', 'DB Shoulder Press', 'Lateral Raises', 'Skull Crushers', 'Triceps Pushdown', 'Incline DB Curls', 'Hammer Curls'],
-      Circuit: ['Kettlebell Swings', 'Sled Push', 'Battle Ropes', 'Circuit'],
+      Circuit: ['Kettlebell Swings', 'Sled Push', 'Battle Ropes', 'Farmer Carry', 'Sandbag Carry', 'Loaded Step-Up', 'Box Jumps'],
       Cardio: ['Stationary Bike', 'Zone 2 Bike', 'Walk'],
       Recovery: ['Walk', 'Mobility'],
       Custom: ['Bench Press', 'Deadlift', 'Squat', 'Incline DB Press', 'Hip Thrust', 'Stationary Bike', 'Skull Crushers', 'Incline DB Curls']
@@ -713,7 +716,8 @@
         '1. Kettlebell Swings — 30-45 sec',
         '2. Sled Push — 30-45 sec',
         '3. Battle Ropes — 30-45 sec',
-        '4. Circuit / Carry Finisher — 2-3 rounds'
+        '4. Farmer Carry or Sandbag Carry — 2-3 rounds',
+        '5. Loaded Step-Up or Box Jumps — 3 × 8-10'
       ],
       Cardio: [
         '1. Stationary Bike or Zone 2 Bike — 20-30 min',
@@ -771,6 +775,8 @@
         'Farmer Carry': { sets: 3, reps: '40 yd' },
         'Sandbag Carry': { sets: 3, reps: '40 yd' },
         'Jump Box': { sets: 3, reps: '10' },
+        'Loaded Step-Up': { sets: 3, reps: '8-10' },
+        'Box Jumps': { sets: 3, reps: '8-10' },
         'Skull Crushers': { sets: 3, reps: '10-12' },
         'Triceps Pushdown': { sets: 3, reps: '10-12' },
         'Overhead Triceps Extension': { sets: 3, reps: '10-12' },
@@ -783,7 +789,7 @@
       const recommendations = getExerciseRecommendations();
       if (recommendations[exercise]) {
         const rec = recommendations[exercise];
-        exerciseRecommendationEl.textContent = `Recommended: ${rec.sets} sets of ${rec.reps} reps`;
+        exerciseRecommendationEl.textContent = `Target: ${rec.sets} × ${rec.reps}`;
       } else {
         exerciseRecommendationEl.textContent = '';
       }
