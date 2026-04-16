@@ -1318,8 +1318,31 @@
         alert('No entries to export yet.');
         return;
       }
-      const headers = ['Date', 'Day', 'Type', 'Exercise', 'Weight', 'Sets', 'Reps', 'Duration', 'Distance', 'Body Weight', 'Waist', 'Notes'];
-      const rows = data.map(d => [d.date, d.day, d.type, d.ex, d.w, d.sets, d.r, d.du, d.di, d.bw, d.wa, d.n]);
+      const headers = ['Date', 'Day', 'Type', 'Exercise', 'Body Weight', 'Waist', 'Pre Glucose', 'Post Glucose', 'Weight', 'Sets', 'Reps', 'Set 1 Weight', 'Set 1 Reps', 'Set 2 Weight', 'Set 2 Reps', 'Set 3 Weight', 'Set 3 Reps', 'Set 4 Weight', 'Set 4 Reps', 'Duration', 'Distance', 'Notes'];
+      const rows = data.map(d => [
+        d.date,
+        d.day,
+        d.type,
+        d.ex,
+        d.bw,
+        d.wa,
+        d.gpre,
+        d.gpost,
+        d.w,
+        d.sets,
+        d.r,
+        d.s1w,
+        d.s1r,
+        d.s2w,
+        d.s2r,
+        d.s3w,
+        d.s3r,
+        d.s4w,
+        d.s4r,
+        d.du,
+        d.di,
+        d.n
+      ]);
       const csv = [headers, ...rows]
         .map(row => row.map(value => `"${String(value ?? '').replaceAll('"', '""')}"`).join(','))
         .join('\n');
@@ -1336,7 +1359,9 @@
       btn.addEventListener('click', () => {
         const input = document.getElementById(btn.dataset.target);
         const step = parseFloat(btn.dataset.step);
-        const current = parseFloat(input.value || '0');
+        if (input.value === '') return;
+        const current = parseFloat(input.value);
+        if (!Number.isFinite(current)) return;
         const next = Math.max(0, current + step);
         input.value = Number.isInteger(next) ? String(next) : next.toFixed(1).replace(/\.0$/, '');
       });
