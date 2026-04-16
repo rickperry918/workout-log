@@ -812,14 +812,19 @@
     const weightEl = document.getElementById('weight');
     const setsEl = document.getElementById('sets');
     const repsEl = document.getElementById('reps');
+    const hasLegacyInputs = !!(weightEl && setsEl && repsEl);
     const durationEl = document.getElementById('duration');
     const distanceEl = document.getElementById('distance');
     const durationWrapEl = document.getElementById('durationWrap');
     const distanceWrapEl = document.getElementById('distanceWrap');
     function updateConditionalFields(type) {
-      const showCardioFields = type === 'Cardio';
+      const exercise = (exerciseEl?.value || '').trim();
+      const showCardioFields = type === 'Cardio' || exercise === 'Stationary Bike' || exercise === 'Zone 2 Bike';
+
       durationWrapEl.classList.toggle('hidden', !showCardioFields);
       distanceWrapEl.classList.toggle('hidden', !showCardioFields);
+      durationWrapEl.style.display = showCardioFields ? '' : 'none';
+      distanceWrapEl.style.display = showCardioFields ? '' : 'none';
 
       if (!showCardioFields) {
         durationEl.value = '';
@@ -984,9 +989,9 @@
         day: dayEl.value,
         type: typeEl.value,
         ex: exerciseEl.value,
-        w: weightEl.value,
-        sets: setsEl.value,
-        r: repsEl.value,
+        w: hasLegacyInputs ? weightEl.value : '',
+        sets: hasLegacyInputs ? setsEl.value : '',
+        r: hasLegacyInputs ? repsEl.value : '',
         du: durationEl.value,
         di: distanceEl.value,
         bw: bodyEl.value,
@@ -1011,9 +1016,11 @@
       dayEl.value = draft.day || dayEl.value;
       typeEl.value = draft.type || typeEl.value;
       exerciseEl.value = draft.ex || '';
-      weightEl.value = draft.w || '';
-      setsEl.value = draft.sets || '';
-      repsEl.value = draft.r || '';
+      if (hasLegacyInputs) {
+        weightEl.value = draft.w || '';
+        setsEl.value = draft.sets || '';
+        repsEl.value = draft.r || '';
+      }
       durationEl.value = draft.du || '';
       distanceEl.value = draft.di || '';
       bodyEl.value = draft.bw || '';
@@ -1095,7 +1102,7 @@
 
       const recommendations = getExerciseRecommendations();
 
-      if (recommendations[exercise]) {
+      if (hasLegacyInputs && recommendations[exercise]) {
         setsEl.value = recommendations[exercise].sets;
         repsEl.value = recommendations[exercise].reps;
       }
@@ -1116,9 +1123,11 @@
       dayEl.value = 'Off Day';
       typeEl.value = 'Custom';
       exerciseEl.value = '';
-      weightEl.value = '';
-      setsEl.value = '';
-      repsEl.value = '';
+      if (hasLegacyInputs) {
+        weightEl.value = '';
+        setsEl.value = '';
+        repsEl.value = '';
+      }
       durationEl.value = '';
       distanceEl.value = '';
       bodyEl.value = '';
@@ -1300,9 +1309,9 @@
         day: dayEl.value,
         type: typeEl.value,
         ex: exerciseEl.value,
-        w: weightEl.value,
-        sets: setsEl.value,
-        r: repsEl.value,
+        w: hasLegacyInputs ? weightEl.value : '',
+        sets: hasLegacyInputs ? setsEl.value : '',
+        r: hasLegacyInputs ? repsEl.value : '',
         du: durationEl.value,
         di: distanceEl.value,
         bw: bodyEl.value,
@@ -1322,9 +1331,11 @@
       });
       saveEntries(data);
       exerciseEl.value = '';
-      weightEl.value = '';
-      setsEl.value = '';
-      repsEl.value = '';
+      if (hasLegacyInputs) {
+        weightEl.value = '';
+        setsEl.value = '';
+        repsEl.value = '';
+      }
       durationEl.value = '';
       distanceEl.value = '';
       notesEl.value = '';
@@ -1437,13 +1448,14 @@ chipsEl.addEventListener('click', (e) => {
 
   const recommendations = getExerciseRecommendations();
 
-  if (recommendations[exercise]) {
+  if (hasLegacyInputs && recommendations[exercise]) {
     setsEl.value = recommendations[exercise].sets;
     repsEl.value = recommendations[exercise].reps;
   }
   updateExerciseRecommendation(exercise);
   updateExerciseHistory(exercise);
   updateSetHistory(exercise);
+  updateConditionalFields(typeEl.value);
 
   chipsEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
   chip.classList.add('active');
@@ -1453,6 +1465,7 @@ chipsEl.addEventListener('click', (e) => {
       updateExerciseRecommendation(exerciseEl.value);
       updateExerciseHistory(exerciseEl.value);
       updateSetHistory(exerciseEl.value);
+      updateConditionalFields(typeEl.value);
     });
     typeEl.addEventListener('change', () => {
       updateExerciseChips();
