@@ -817,6 +817,7 @@
     const distanceEl = document.getElementById('distance');
     const durationWrapEl = document.getElementById('durationWrap');
     const distanceWrapEl = document.getElementById('distanceWrap');
+    const setLoggingWrapEl = document.getElementById('setLoggingWrap');
     function updateConditionalFields(type) {
       const exercise = (exerciseEl?.value || '').trim();
       const isCardioSession = type === 'Cardio' || exercise === 'Stationary Bike' || exercise === 'Zone 2 Bike';
@@ -847,7 +848,6 @@
     const waistEl = document.getElementById('waist');
     const glucosePreEl = document.getElementById('glucosePre');
     const glucosePostEl = document.getElementById('glucosePost');
-    const setLoggingWrapEl = document.getElementById('setLoggingWrap');
     const set1WeightEl = document.getElementById('set1Weight');
     const set1RepsEl = document.getElementById('set1Reps');
     const set1HistoryEl = document.getElementById('set1History');
