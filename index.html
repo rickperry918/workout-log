@@ -284,6 +284,32 @@
       font-weight: 600;
     }
 
+    .exercise-history {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+
+    .set-log-grid {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .set-log-row {
+      display: grid;
+      grid-template-columns: 72px 1fr 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .set-log-label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
     .tool-buttons {
       display: grid;
       grid-template-columns: 1fr;
@@ -506,6 +532,7 @@
                 <label for="exercise">Exercise</label>
                 <input id="exercise" list="exerciseList" placeholder="Exercise" />
                 <div id="exerciseRecommendation" class="exercise-recommendation"></div>
+                <div id="exerciseHistory" class="exercise-history"></div>
                 <datalist id="exerciseList">
                   <option value="Bench Press"></option>
                   <option value="Overhead Press"></option>
@@ -589,6 +616,52 @@
                   <button class="step-btn" type="button" data-target="waist" data-step="-0.5">−</button>
                   <input id="waist" type="number" placeholder="43.5" inputmode="decimal" />
                   <button class="step-btn" type="button" data-target="waist" data-step="0.5">+</button>
+                </div>
+              </div>
+
+              <div>
+                <label for="glucosePre">Pre-Workout Glucose</label>
+                <input id="glucosePre" type="number" placeholder="110" inputmode="numeric" />
+              </div>
+
+              <div>
+                <label for="glucosePost">Post-Workout Glucose</label>
+                <input id="glucosePost" type="number" placeholder="125" inputmode="numeric" />
+              </div>
+
+              <div>
+                <label for="glucosePre">Pre-Workout Glucose</label>
+                <input id="glucosePre" type="number" placeholder="110" inputmode="numeric" />
+              </div>
+
+              <div>
+                <label for="glucosePost">Post-Workout Glucose</label>
+                <input id="glucosePost" type="number" placeholder="125" inputmode="numeric" />
+              </div>
+
+              <div class="full">
+                <label>Set Logging</label>
+                <div class="set-log-grid">
+                  <div class="set-log-row">
+                    <div class="set-log-label">Set 1</div>
+                    <input id="set1Weight" type="number" placeholder="Weight" inputmode="decimal" />
+                    <input id="set1Reps" type="text" placeholder="Reps / sec / yd" inputmode="text" />
+                  </div>
+                  <div class="set-log-row">
+                    <div class="set-log-label">Set 2</div>
+                    <input id="set2Weight" type="number" placeholder="Weight" inputmode="decimal" />
+                    <input id="set2Reps" type="text" placeholder="Reps / sec / yd" inputmode="text" />
+                  </div>
+                  <div class="set-log-row">
+                    <div class="set-log-label">Set 3</div>
+                    <input id="set3Weight" type="number" placeholder="Weight" inputmode="decimal" />
+                    <input id="set3Reps" type="text" placeholder="Reps / sec / yd" inputmode="text" />
+                  </div>
+                  <div class="set-log-row">
+                    <div class="set-log-label">Set 4</div>
+                    <input id="set4Weight" type="number" placeholder="Weight" inputmode="decimal" />
+                    <input id="set4Reps" type="text" placeholder="Reps / sec / yd" inputmode="text" />
+                  </div>
                 </div>
               </div>
 
@@ -738,6 +811,7 @@
     const typeEl = document.getElementById('type');
     const exerciseEl = document.getElementById('exercise');
     const exerciseRecommendationEl = document.getElementById('exerciseRecommendation');
+    const exerciseHistoryEl = document.getElementById('exerciseHistory');
     const weightEl = document.getElementById('weight');
     const setsEl = document.getElementById('sets');
     const repsEl = document.getElementById('reps');
@@ -745,6 +819,16 @@
     const distanceEl = document.getElementById('distance');
     const bodyEl = document.getElementById('body');
     const waistEl = document.getElementById('waist');
+    const glucosePreEl = document.getElementById('glucosePre');
+    const glucosePostEl = document.getElementById('glucosePost');
+    const set1WeightEl = document.getElementById('set1Weight');
+    const set1RepsEl = document.getElementById('set1Reps');
+    const set2WeightEl = document.getElementById('set2Weight');
+    const set2RepsEl = document.getElementById('set2Reps');
+    const set3WeightEl = document.getElementById('set3Weight');
+    const set3RepsEl = document.getElementById('set3Reps');
+    const set4WeightEl = document.getElementById('set4Weight');
+    const set4RepsEl = document.getElementById('set4Reps');
     const notesEl = document.getElementById('notes');
     const logEl = document.getElementById('log');
     const chipsEl = document.getElementById('exerciseChips');
@@ -793,6 +877,26 @@
       } else {
         exerciseRecommendationEl.textContent = '';
       }
+    }
+
+    function updateExerciseHistory(exercise) {
+      const name = (exercise || '').trim();
+      if (!name) {
+        exerciseHistoryEl.textContent = '';
+        return;
+      }
+
+      const last = [...load()].reverse().find(d => d.ex === name && d.w !== '');
+      if (!last) {
+        exerciseHistoryEl.textContent = '';
+        return;
+      }
+
+      const lastWeight = parseFloat(last.w);
+      const suggested = Number.isFinite(lastWeight) ? lastWeight + 5 : null;
+      exerciseHistoryEl.textContent = suggested
+        ? `Last: ${last.w} lb on ${last.date}. Suggested next: ${suggested} lb.`
+        : `Last logged on ${last.date}.`;
     }
 
 
@@ -866,6 +970,7 @@
         repsEl.value = recommendations[exercise].reps;
       }
       updateExerciseRecommendation(exercise);
+      updateExerciseHistory(exercise);
 
       if (type === 'Hypertrophy') {
         notesEl.value = 'Template: Incline DB Press, Chest Fly, DB Shoulder Press, Lateral Raises, Skull Crushers or Triceps Pushdown, Incline DB Curls, Hammer Curls';
@@ -887,8 +992,19 @@
       distanceEl.value = '';
       bodyEl.value = '';
       waistEl.value = '';
+      glucosePreEl.value = '';
+      glucosePostEl.value = '';
+      set1WeightEl.value = '';
+      set1RepsEl.value = '';
+      set2WeightEl.value = '';
+      set2RepsEl.value = '';
+      set3WeightEl.value = '';
+      set3RepsEl.value = '';
+      set4WeightEl.value = '';
+      set4RepsEl.value = '';
       notesEl.value = '';
       exerciseRecommendationEl.textContent = '';
+      exerciseHistoryEl.textContent = '';
       updateExerciseChips();
       updateWorkoutPreview('Custom');
       clearActive('dayButtons');
@@ -1141,6 +1257,7 @@ chipsEl.addEventListener('click', (e) => {
     repsEl.value = recommendations[exercise].reps;
   }
   updateExerciseRecommendation(exercise);
+  updateExerciseHistory(exercise);
 
   chipsEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
   chip.classList.add('active');
@@ -1148,6 +1265,7 @@ chipsEl.addEventListener('click', (e) => {
 
     exerciseEl.addEventListener('input', () => {
       updateExerciseRecommendation(exerciseEl.value);
+      updateExerciseHistory(exerciseEl.value);
     });
     typeEl.addEventListener('change', () => {
       updateExerciseChips();
