@@ -310,6 +310,14 @@
       font-weight: 700;
     }
 
+    .set-log-history {
+      grid-column: 2 / 4;
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.3;
+      margin-top: -2px;
+    }
+
     .tool-buttons {
       display: grid;
       grid-template-columns: 1fr;
@@ -619,21 +627,25 @@
                     <div class="set-log-label">Set 1</div>
                     <input id="set1Weight" type="number" placeholder="Weight" inputmode="decimal" />
                     <input id="set1Reps" type="text" placeholder="Reps / sec / yd" inputmode="text" />
+                    <div id="set1History" class="set-log-history"></div>
                   </div>
                   <div class="set-log-row">
                     <div class="set-log-label">Set 2</div>
                     <input id="set2Weight" type="number" placeholder="Weight" inputmode="decimal" />
                     <input id="set2Reps" type="text" placeholder="Reps / sec / yd" inputmode="text" />
+                    <div id="set2History" class="set-log-history"></div>
                   </div>
                   <div class="set-log-row">
                     <div class="set-log-label">Set 3</div>
                     <input id="set3Weight" type="number" placeholder="Weight" inputmode="decimal" />
                     <input id="set3Reps" type="text" placeholder="Reps / sec / yd" inputmode="text" />
+                    <div id="set3History" class="set-log-history"></div>
                   </div>
                   <div class="set-log-row">
                     <div class="set-log-label">Set 4</div>
                     <input id="set4Weight" type="number" placeholder="Weight" inputmode="decimal" />
                     <input id="set4Reps" type="text" placeholder="Reps / sec / yd" inputmode="text" />
+                    <div id="set4History" class="set-log-history"></div>
                   </div>
                 </div>
               </div>
@@ -797,12 +809,47 @@
     const glucosePostEl = document.getElementById('glucosePost');
     const set1WeightEl = document.getElementById('set1Weight');
     const set1RepsEl = document.getElementById('set1Reps');
+    const set1HistoryEl = document.getElementById('set1History');
     const set2WeightEl = document.getElementById('set2Weight');
     const set2RepsEl = document.getElementById('set2Reps');
+    const set2HistoryEl = document.getElementById('set2History');
     const set3WeightEl = document.getElementById('set3Weight');
     const set3RepsEl = document.getElementById('set3Reps');
+    const set3HistoryEl = document.getElementById('set3History');
     const set4WeightEl = document.getElementById('set4Weight');
     const set4RepsEl = document.getElementById('set4Reps');
+    const set4HistoryEl = document.getElementById('set4History');
+    function updateSetHistory(exercise) {
+      const name = (exercise || '').trim();
+      const targets = [set1HistoryEl, set2HistoryEl, set3HistoryEl, set4HistoryEl];
+
+      if (!name) {
+        targets.forEach(el => { el.textContent = ''; });
+        return;
+      }
+
+      const last = [...load()].reverse().find(d => d.ex === name && (
+        d.s1w || d.s1r || d.s2w || d.s2r || d.s3w || d.s3r || d.s4w || d.s4r
+      ));
+
+      if (!last) {
+        targets.forEach(el => { el.textContent = ''; });
+        return;
+      }
+
+      const values = [
+        [last.s1w, last.s1r],
+        [last.s2w, last.s2r],
+        [last.s3w, last.s3r],
+        [last.s4w, last.s4r]
+      ];
+
+      values.forEach(([weight, reps], index) => {
+        targets[index].textContent = (weight || reps)
+          ? `Last: ${weight || '—'}${weight ? ' lb' : ''} × ${reps || '—'}`
+          : '';
+      });
+    }
     const notesEl = document.getElementById('notes');
     const logEl = document.getElementById('log');
     const chipsEl = document.getElementById('exerciseChips');
@@ -963,6 +1010,7 @@
       updateWorkoutPreview(typeEl.value);
       updateExerciseRecommendation(exerciseEl.value);
       updateExerciseHistory(exerciseEl.value);
+      updateSetHistory(exerciseEl.value);
     }
 
     function setupDraftAutosave() {
@@ -1028,6 +1076,7 @@
       }
       updateExerciseRecommendation(exercise);
       updateExerciseHistory(exercise);
+      updateSetHistory(exercise);
 
       if (type === 'Hypertrophy') {
         notesEl.value = 'Template: Incline DB Press, Chest Fly, DB Shoulder Press, Lateral Raises, Skull Crushers or Triceps Pushdown, Incline DB Curls, Hammer Curls';
@@ -1062,6 +1111,10 @@
       notesEl.value = '';
       exerciseRecommendationEl.textContent = '';
       exerciseHistoryEl.textContent = '';
+      set1HistoryEl.textContent = '';
+      set2HistoryEl.textContent = '';
+      set3HistoryEl.textContent = '';
+      set4HistoryEl.textContent = '';
       updateExerciseChips();
       updateWorkoutPreview('Custom');
       clearActive('dayButtons');
@@ -1364,6 +1417,7 @@ chipsEl.addEventListener('click', (e) => {
   }
   updateExerciseRecommendation(exercise);
   updateExerciseHistory(exercise);
+  updateSetHistory(exercise);
 
   chipsEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
   chip.classList.add('active');
@@ -1372,6 +1426,7 @@ chipsEl.addEventListener('click', (e) => {
     exerciseEl.addEventListener('input', () => {
       updateExerciseRecommendation(exerciseEl.value);
       updateExerciseHistory(exerciseEl.value);
+      updateSetHistory(exerciseEl.value);
     });
     typeEl.addEventListener('change', () => {
       updateExerciseChips();
