@@ -496,6 +496,10 @@
               <div>
                 <label>Quick Exercise Picks</label>
                 <div class="chips" id="exerciseChips"></div>
+                <div id="workoutPreview" style="margin-top:10px;padding:12px;border:1px solid var(--border);border-radius:14px;background:rgba(11,18,32,0.7);">
+                  <div style="color:var(--muted);font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Workout Structure</div>
+                  <div id="workoutPreviewList" style="display:grid;gap:6px;font-size:0.88rem;line-height:1.35;"></div>
+                </div>
               </div>
 
               <div class="full">
@@ -550,7 +554,7 @@
               </div>
               <div>
                 <label for="reps">Reps</label>
-                <input id="reps" type="number" placeholder="10" />
+                <input id="reps" type="text" placeholder="4-6" inputmode="text" />
               </div>
 
               <div>
@@ -674,6 +678,57 @@
       Custom: ['Bench Press', 'Deadlift', 'Squat', 'Incline DB Press', 'Hip Thrust', 'Stationary Bike', 'Skull Crushers', 'Incline DB Curls']
     };
 
+    const workoutTemplates = {
+      Push: [
+        '1. Bench Press — 4 × 4-6',
+        '2. Incline DB Press — 3-4 × 8-12',
+        '3. DB Shoulder Press — 3 × 8-10',
+        '4. Lateral Raises — 3 × 12-15',
+        '5. Triceps Pushdown — 3 × 10-12'
+      ],
+      Pull: [
+        '1. Deadlift — 4 × 3-5',
+        '2. Assisted Pull-Ups — 3 × 6-8',
+        '3. Barbell Rows — 3 × 8-10',
+        '4. Face Pulls — 3 × 15',
+        '5. Barbell Curls — 3 × 10-12'
+      ],
+      Legs: [
+        '1. Squat — 4 × 4-6',
+        '2. Romanian Deadlift — 3 × 8-10',
+        '3. Hip Thrust — 3 × 8-12',
+        '4. Walking Lunges — 3 × 10-12',
+        '5. Leg Curl — 3 × 10-12'
+      ],
+      Hypertrophy: [
+        '1. Incline DB Press — 4 × 8-12',
+        '2. Chest Fly — 3 × 10-12',
+        '3. DB Shoulder Press — 3 × 8-10',
+        '4. Lateral Raises — 3 × 15',
+        '5. Skull Crushers or Triceps Pushdown — 3 × 10-12',
+        '6. Incline DB Curls — 3 × 10-12',
+        '7. Hammer Curls — 3 × 10-12'
+      ],
+      Circuit: [
+        '1. Kettlebell Swings — 30-45 sec',
+        '2. Sled Push — 30-45 sec',
+        '3. Battle Ropes — 30-45 sec',
+        '4. Circuit / Carry Finisher — 2-3 rounds'
+      ],
+      Cardio: [
+        '1. Stationary Bike or Zone 2 Bike — 20-30 min',
+        '2. Walk — optional cooldown'
+      ],
+      Recovery: [
+        '1. Walk — easy effort',
+        '2. Mobility — 10-15 min'
+      ],
+      Custom: [
+        'Pick the exercises you need today.',
+        'Use the chips and recommendations below.'
+      ]
+    };
+
     const dateEl = document.getElementById('date');
     const dayEl = document.getElementById('day');
     const typeEl = document.getElementById('type');
@@ -689,31 +744,32 @@
     const notesEl = document.getElementById('notes');
     const logEl = document.getElementById('log');
     const chipsEl = document.getElementById('exerciseChips');
+    const workoutPreviewListEl = document.getElementById('workoutPreviewList');
     const importStepsCsvBtn = document.getElementById('importStepsCsv');
     const stepsCsvFileEl = document.getElementById('stepsCsvFile');
     function getExerciseRecommendations() {
       return {
-        'Bench Press': { sets: 4, reps: 5 },
-        'Overhead Press': { sets: 3, reps: 6 },
-        'Incline DB Press': { sets: 4, reps: 10 },
-        'Deadlift': { sets: 4, reps: 4 },
-        'Weighted Pull-Ups': { sets: 3, reps: 5 },
-        'Assisted Pull-Ups': { sets: 3, reps: 8 },
-        'Barbell Rows': { sets: 3, reps: 8 },
-        'Face Pulls': { sets: 3, reps: 15 },
-        'Squat': { sets: 4, reps: 5 },
-        'Romanian Deadlift': { sets: 3, reps: 8 },
-        'Hip Thrust': { sets: 3, reps: 10 },
-        'Walking Lunges': { sets: 3, reps: 12 },
-        'Leg Curl': { sets: 3, reps: 12 },
-        'DB Shoulder Press': { sets: 3, reps: 10 },
-        'Lateral Raises': { sets: 3, reps: 15 },
-        'Chest Fly': { sets: 3, reps: 12 },
-        'Skull Crushers': { sets: 3, reps: 12 },
-        'Triceps Pushdown': { sets: 3, reps: 12 },
-        'Overhead Triceps Extension': { sets: 2, reps: 12 },
-        'Incline DB Curls': { sets: 3, reps: 12 },
-        'Hammer Curls': { sets: 3, reps: 12 }
+        'Bench Press': { sets: 4, reps: '4-6' },
+        'Overhead Press': { sets: 3, reps: '4-6' },
+        'Incline DB Press': { sets: 4, reps: '8-12' },
+        'Deadlift': { sets: 4, reps: '3-5' },
+        'Weighted Pull-Ups': { sets: 3, reps: '4-6' },
+        'Assisted Pull-Ups': { sets: 3, reps: '6-8' },
+        'Barbell Rows': { sets: 3, reps: '8-10' },
+        'Face Pulls': { sets: 3, reps: '12-15' },
+        'Squat': { sets: 4, reps: '4-6' },
+        'Romanian Deadlift': { sets: 3, reps: '8-10' },
+        'Hip Thrust': { sets: 3, reps: '8-12' },
+        'Walking Lunges': { sets: 3, reps: '10-12' },
+        'Leg Curl': { sets: 3, reps: '10-12' },
+        'DB Shoulder Press': { sets: 3, reps: '8-10' },
+        'Lateral Raises': { sets: 3, reps: '12-15' },
+        'Chest Fly': { sets: 3, reps: '10-12' },
+        'Skull Crushers': { sets: 3, reps: '10-12' },
+        'Triceps Pushdown': { sets: 3, reps: '10-12' },
+        'Overhead Triceps Extension': { sets: 2, reps: '10-12' },
+        'Incline DB Curls': { sets: 3, reps: '10-12' },
+        'Hammer Curls': { sets: 3, reps: '10-12' }
       };
     }
 
@@ -721,7 +777,7 @@
       const recommendations = getExerciseRecommendations();
       if (recommendations[exercise]) {
         const rec = recommendations[exercise];
-        exerciseRecommendationEl.textContent = `Recommended: ${rec.sets} sets × ${rec.reps} reps`;
+        exerciseRecommendationEl.textContent = `Recommended: ${rec.sets} sets of ${rec.reps} reps`;
       } else {
         exerciseRecommendationEl.textContent = '';
       }
@@ -766,6 +822,13 @@
       chipsEl.innerHTML = list.map(item => `<button type="button" class="chip" data-exercise="${item}">${item}</button>`).join('');
     }
 
+    function updateWorkoutPreview(type) {
+      const items = workoutTemplates[type] || workoutTemplates.Custom;
+      workoutPreviewListEl.innerHTML = items
+        .map(item => `<div class="workout-preview-item">${item}</div>`)
+        .join('');
+    }
+
     function clearActive(groupId) {
       const group = document.getElementById(groupId);
       if (!group) return;
@@ -782,6 +845,7 @@
       typeEl.value = type;
       exerciseEl.value = exercise;
       updateExerciseChips();
+      updateWorkoutPreview(type);
 
       const recommendations = getExerciseRecommendations();
 
@@ -814,6 +878,7 @@
       notesEl.value = '';
       exerciseRecommendationEl.textContent = '';
       updateExerciseChips();
+      updateWorkoutPreview('Custom');
       clearActive('dayButtons');
       document.querySelector('#dayButtons .preset-btn:last-child')?.classList.add('active');
       clearActive('workoutButtons');
@@ -1072,7 +1137,10 @@ chipsEl.addEventListener('click', (e) => {
     exerciseEl.addEventListener('input', () => {
       updateExerciseRecommendation(exerciseEl.value);
     });
-    typeEl.addEventListener('change', updateExerciseChips);
+    typeEl.addEventListener('change', () => {
+      updateExerciseChips();
+      updateWorkoutPreview(typeEl.value);
+    });
     document.getElementById('search').addEventListener('input', render);
     document.getElementById('filterDay').addEventListener('change', render);
     document.getElementById('filterType').addEventListener('change', render);
@@ -1087,6 +1155,7 @@ chipsEl.addEventListener('click', (e) => {
     dayEl.value = 'Off Day';
     typeEl.value = 'Custom';
     updateExerciseChips();
+    updateWorkoutPreview('Custom');
     presetWorkout('Custom', '', document.querySelector('#workoutButtons .preset-btn.active'));
     render();
   </script>
