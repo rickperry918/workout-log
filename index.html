@@ -732,6 +732,7 @@
 
   <script>
     const KEY = 'tracker';
+    const DRAFT_KEY = 'trackerDraft';
 
     const exerciseMap = {
       Push: ['Bench Press', 'Overhead Press', 'Incline DB Press', 'Lateral Raises', 'Triceps Pushdown'],
@@ -906,6 +907,89 @@
 
     function saveEntries(data) {
       localStorage.setItem(KEY, JSON.stringify(data));
+    }
+
+    function loadDraft() {
+      try {
+        return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+      } catch {
+        return null;
+      }
+    }
+
+    function saveDraft(draft) {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    }
+
+    function clearDraft() {
+      localStorage.removeItem(DRAFT_KEY);
+    }
+
+    function getDraftFromForm() {
+      return {
+        date: dateEl.value,
+        day: dayEl.value,
+        type: typeEl.value,
+        ex: exerciseEl.value,
+        w: weightEl.value,
+        sets: setsEl.value,
+        r: repsEl.value,
+        du: durationEl.value,
+        di: distanceEl.value,
+        bw: bodyEl.value,
+        wa: waistEl.value,
+        gpre: glucosePreEl.value,
+        gpost: glucosePostEl.value,
+        s1w: set1WeightEl.value,
+        s1r: set1RepsEl.value,
+        s2w: set2WeightEl.value,
+        s2r: set2RepsEl.value,
+        s3w: set3WeightEl.value,
+        s3r: set3RepsEl.value,
+        s4w: set4WeightEl.value,
+        s4r: set4RepsEl.value,
+        n: notesEl.value
+      };
+    }
+
+    function applyDraft(draft) {
+      if (!draft) return;
+      dateEl.value = draft.date || dateEl.value;
+      dayEl.value = draft.day || dayEl.value;
+      typeEl.value = draft.type || typeEl.value;
+      exerciseEl.value = draft.ex || '';
+      weightEl.value = draft.w || '';
+      setsEl.value = draft.sets || '';
+      repsEl.value = draft.r || '';
+      durationEl.value = draft.du || '';
+      distanceEl.value = draft.di || '';
+      bodyEl.value = draft.bw || '';
+      waistEl.value = draft.wa || '';
+      glucosePreEl.value = draft.gpre || '';
+      glucosePostEl.value = draft.gpost || '';
+      set1WeightEl.value = draft.s1w || '';
+      set1RepsEl.value = draft.s1r || '';
+      set2WeightEl.value = draft.s2w || '';
+      set2RepsEl.value = draft.s2r || '';
+      set3WeightEl.value = draft.s3w || '';
+      set3RepsEl.value = draft.s3r || '';
+      set4WeightEl.value = draft.s4w || '';
+      set4RepsEl.value = draft.s4r || '';
+      notesEl.value = draft.n || '';
+      updateExerciseChips();
+      updateWorkoutPreview(typeEl.value);
+      updateExerciseRecommendation(exerciseEl.value);
+      updateExerciseHistory(exerciseEl.value);
+    }
+
+    function setupDraftAutosave() {
+      const form = document.getElementById('entryForm');
+      form.addEventListener('input', () => {
+        saveDraft(getDraftFromForm());
+      });
+      form.addEventListener('change', () => {
+        saveDraft(getDraftFromForm());
+      });
     }
 
     function formatValue(value, suffix = '') {
@@ -1132,8 +1216,11 @@
             <div class="meta-box"><div class="meta-label">Distance</div><div class="meta-value">${formatValue(d.di)}</div></div>
             <div class="meta-box"><div class="meta-label">Body Weight</div><div class="meta-value">${formatValue(d.bw, ' lb')}</div></div>
             <div class="meta-box"><div class="meta-label">Waist</div><div class="meta-value">${formatValue(d.wa, ' in')}</div></div>
+            <div class="meta-box"><div class="meta-label">Pre Glucose</div><div class="meta-value">${formatValue(d.gpre)}</div></div>
+            <div class="meta-box"><div class="meta-label">Post Glucose</div><div class="meta-value">${formatValue(d.gpost)}</div></div>
             <div class="meta-box"><div class="meta-label">Steps</div><div class="meta-value">${formatValue(d.steps)}</div></div>
           </div>
+          ${(d.s1w || d.s1r || d.s2w || d.s2r || d.s3w || d.s3r || d.s4w || d.s4r) ? `<div class="helper" style="margin-top:10px;">Set 1: ${formatValue(d.s1w, ' lb')} × ${formatValue(d.s1r)}<br>Set 2: ${formatValue(d.s2w, ' lb')} × ${formatValue(d.s2r)}<br>Set 3: ${formatValue(d.s3w, ' lb')} × ${formatValue(d.s3r)}<br>Set 4: ${formatValue(d.s4w, ' lb')} × ${formatValue(d.s4r)}</div>` : ''}
           ${d.n ? `<div class="helper" style="margin-top:10px;">Notes: ${d.n}</div>` : ''}
           <div class="action-row" style="margin-top:12px;">
             <button class="danger" type="button" onclick="deleteEntry('${d.id}')">Delete</button>
@@ -1158,6 +1245,16 @@
         di: distanceEl.value,
         bw: bodyEl.value,
         wa: waistEl.value,
+        gpre: glucosePreEl.value,
+        gpost: glucosePostEl.value,
+        s1w: set1WeightEl.value,
+        s1r: set1RepsEl.value,
+        s2w: set2WeightEl.value,
+        s2r: set2RepsEl.value,
+        s3w: set3WeightEl.value,
+        s3r: set3RepsEl.value,
+        s4w: set4WeightEl.value,
+        s4r: set4RepsEl.value,
         n: notesEl.value,
         steps: ''
       });
@@ -1169,6 +1266,17 @@
       durationEl.value = '';
       distanceEl.value = '';
       notesEl.value = '';
+      glucosePreEl.value = '';
+      glucosePostEl.value = '';
+      set1WeightEl.value = '';
+      set1RepsEl.value = '';
+      set2WeightEl.value = '';
+      set2RepsEl.value = '';
+      set3WeightEl.value = '';
+      set3RepsEl.value = '';
+      set4WeightEl.value = '';
+      set4RepsEl.value = '';
+      clearDraft();
       render();
     });
 
@@ -1277,6 +1385,8 @@ chipsEl.addEventListener('click', (e) => {
     updateExerciseChips();
     updateWorkoutPreview('Custom');
     presetWorkout('Custom', '', document.querySelector('#workoutButtons .preset-btn.active'));
+    applyDraft(loadDraft());
+    setupDraftAutosave();
     render();
   </script>
 </body>
