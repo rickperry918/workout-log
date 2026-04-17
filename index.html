@@ -1413,32 +1413,94 @@
         alert('No entries to export yet.');
         return;
       }
-      const headers = ['Date', 'Day', 'Type', 'Exercise', 'Body Weight', 'Waist', 'Pre Glucose', 'Post Glucose', 'Weight', 'Sets', 'Reps', 'Set 1 Weight', 'Set 1 Reps', 'Set 2 Weight', 'Set 2 Reps', 'Set 3 Weight', 'Set 3 Reps', 'Set 4 Weight', 'Set 4 Reps', 'Duration', 'Distance', 'Notes'];
-      const rows = data.map(d => [
-        d.date,
-        d.day,
-        d.type,
-        d.ex,
-        d.bw,
-        d.wa,
-        d.gpre,
-        d.gpost,
-        d.w,
-        d.sets,
-        d.r,
-        d.s1w,
-        d.s1r,
-        d.s2w,
-        d.s2r,
-        d.s3w,
-        d.s3r,
-        d.s4w,
-        d.s4r,
-        d.du,
-        d.di,
-        d.n
-      ]);
-      const csv = [headers, ...rows]
+
+      const headers = [
+        'Row Type',
+        'Date',
+        'Day',
+        'Workout Type',
+        'Exercise',
+        'Top Set',
+        'Set 1 Weight',
+        'Set 1 Reps',
+        'Set 2 Weight',
+        'Set 2 Reps',
+        'Set 3 Weight',
+        'Set 3 Reps',
+        'Set 4 Weight',
+        'Set 4 Reps',
+        'Duration',
+        'Distance',
+        'Notes',
+        'Body Weight',
+        'Waist',
+        'Pre Glucose',
+        'Post Glucose'
+      ];
+
+      const workoutRows = data.map(d => {
+        const topSet = (d.s1w || d.s1r) ? `${d.s1w || '—'}${d.s1w ? ' lb' : ''} × ${d.s1r || '—'}` : '';
+        return [
+          'Workout',
+          d.date,
+          d.day,
+          d.type,
+          d.ex,
+          topSet,
+          d.s1w,
+          d.s1r,
+          d.s2w,
+          d.s2r,
+          d.s3w,
+          d.s3r,
+          d.s4w,
+          d.s4r,
+          d.du,
+          d.di,
+          d.n,
+          '',
+          '',
+          '',
+          ''
+        ];
+      });
+
+      const dailyMetricMap = new Map();
+      [...data].reverse().forEach(d => {
+        const hasMetrics = d.bw || d.wa || d.gpre || d.gpost;
+        if (!hasMetrics) return;
+        if (!dailyMetricMap.has(d.date)) {
+          dailyMetricMap.set(d.date, d);
+        }
+      });
+
+      const metricRows = [...dailyMetricMap.values()]
+        .sort((a, b) => String(a.date).localeCompare(String(b.date)))
+        .map(d => [
+          'Daily Metrics',
+          d.date,
+          d.day,
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          d.n,
+          d.bw,
+          d.wa,
+          d.gpre,
+          d.gpost
+        ]);
+
+      const csv = [headers, ...workoutRows, ...metricRows]
         .map(row => row.map(value => `"${String(value ?? '').replaceAll('"', '""')}"`).join(','))
         .join('\n');
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
