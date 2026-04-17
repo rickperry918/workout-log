@@ -1304,9 +1304,7 @@
             <span class="tag">${d.type || 'Custom'}</span>
           </div>
           <div class="meta-grid">
-            <div class="meta-box"><div class="meta-label">Weight</div><div class="meta-value">${formatValue(d.w || d.s1w, ' lb')}</div></div>
-            <div class="meta-box"><div class="meta-label">Sets</div><div class="meta-value">${formatValue(d.sets || [d.s1w || d.s1r, d.s2w || d.s2r, d.s3w || d.s3r, d.s4w || d.s4r].filter(Boolean).length)}</div></div>
-            <div class="meta-box"><div class="meta-label">Reps</div><div class="meta-value">${formatValue(d.r || d.s1r)}</div></div>
+            <div class="meta-box"><div class="meta-label">Top Set</div><div class="meta-value">${(d.s1w || d.s1r) ? `${d.s1w || '—'}${d.s1w ? ' lb' : ''} × ${d.s1r || '—'}` : '—'}</div></div>
             <div class="meta-box"><div class="meta-label">Duration</div><div class="meta-value">${formatValue(d.du, ' min')}</div></div>
             <div class="meta-box"><div class="meta-label">Distance</div><div class="meta-value">${formatValue(d.di)}</div></div>
             <div class="meta-box"><div class="meta-label">Body Weight</div><div class="meta-value">${formatValue(d.bw, ' lb')}</div></div>
