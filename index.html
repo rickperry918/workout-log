@@ -1304,9 +1304,9 @@
             <span class="tag">${d.type || 'Custom'}</span>
           </div>
           <div class="meta-grid">
-            <div class="meta-box"><div class="meta-label">Weight</div><div class="meta-value">${formatValue(d.w, ' lb')}</div></div>
-            <div class="meta-box"><div class="meta-label">Sets</div><div class="meta-value">${formatValue(d.sets)}</div></div>
-            <div class="meta-box"><div class="meta-label">Reps</div><div class="meta-value">${formatValue(d.r)}</div></div>
+            <div class="meta-box"><div class="meta-label">Weight</div><div class="meta-value">${formatValue(d.w || d.s1w, ' lb')}</div></div>
+            <div class="meta-box"><div class="meta-label">Sets</div><div class="meta-value">${formatValue(d.sets || [d.s1w || d.s1r, d.s2w || d.s2r, d.s3w || d.s3r, d.s4w || d.s4r].filter(Boolean).length)}</div></div>
+            <div class="meta-box"><div class="meta-label">Reps</div><div class="meta-value">${formatValue(d.r || d.s1r)}</div></div>
             <div class="meta-box"><div class="meta-label">Duration</div><div class="meta-value">${formatValue(d.du, ' min')}</div></div>
             <div class="meta-box"><div class="meta-label">Distance</div><div class="meta-value">${formatValue(d.di)}</div></div>
             <div class="meta-box"><div class="meta-label">Body Weight</div><div class="meta-value">${formatValue(d.bw, ' lb')}</div></div>
@@ -1315,7 +1315,7 @@
             <div class="meta-box"><div class="meta-label">Post Glucose</div><div class="meta-value">${formatValue(d.gpost)}</div></div>
             <div class="meta-box"><div class="meta-label">Steps</div><div class="meta-value">${formatValue(d.steps)}</div></div>
           </div>
-          ${(d.s1w || d.s1r || d.s2w || d.s2r || d.s3w || d.s3r || d.s4w || d.s4r) ? `<div class="helper" style="margin-top:10px;">Set 1: ${formatValue(d.s1w, ' lb')} × ${formatValue(d.s1r)}<br>Set 2: ${formatValue(d.s2w, ' lb')} × ${formatValue(d.s2r)}<br>Set 3: ${formatValue(d.s3w, ' lb')} × ${formatValue(d.s3r)}<br>Set 4: ${formatValue(d.s4w, ' lb')} × ${formatValue(d.s4r)}</div>` : ''}
+          
           ${d.n ? `<div class="helper" style="margin-top:10px;">Notes: ${d.n}</div>` : ''}
           <div class="action-row" style="margin-top:12px;">
             <button class="danger" type="button" onclick="deleteEntry('${d.id}')">Delete</button>
