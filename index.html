@@ -876,7 +876,7 @@
       const targets = [set1HistoryEl, set2HistoryEl, set3HistoryEl, set4HistoryEl];
 
       if (!name) {
-        targets.forEach(el => { el.textContent = ''; });
+        targets.forEach(el => { el.textContent = 'Last: — lb × —'; });
         return;
       }
 
@@ -885,7 +885,7 @@
       ));
 
       if (!last) {
-        targets.forEach(el => { el.textContent = ''; });
+        targets.forEach(el => { el.textContent = 'Last: — lb × —'; });
         return;
       }
 
@@ -899,7 +899,7 @@
       values.forEach(([weight, reps], index) => {
         targets[index].textContent = (weight || reps)
           ? `Last: ${weight || '—'}${weight ? ' lb' : ''} × ${reps || '—'}`
-          : '';
+          : 'Last: — lb × —';
       });
     }
     const notesEl = document.getElementById('notes');
@@ -1169,10 +1169,10 @@
       notesEl.value = '';
       exerciseRecommendationEl.textContent = '';
       exerciseHistoryEl.textContent = '';
-      set1HistoryEl.textContent = '';
-      set2HistoryEl.textContent = '';
-      set3HistoryEl.textContent = '';
-      set4HistoryEl.textContent = '';
+      set1HistoryEl.textContent = 'Last: — lb × —';
+      set2HistoryEl.textContent = 'Last: — lb × —';
+      set3HistoryEl.textContent = 'Last: — lb × —';
+      set4HistoryEl.textContent = 'Last: — lb × —';
       updateExerciseChips();
       updateWorkoutPreview('Custom');
       updateConditionalFields('Custom');
@@ -1513,6 +1513,7 @@ chipsEl.addEventListener('click', (e) => {
     updateWorkoutPreview('Custom');
     updateConditionalFields('Custom');
     presetWorkout('Custom', '', document.querySelector('#workoutButtons .preset-btn.active'));
+    updateSetHistory('');
     applyDraft(loadDraft());
     setupDraftAutosave();
     render();
