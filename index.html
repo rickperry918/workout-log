@@ -700,6 +700,7 @@
             <button class="secondary" type="button" id="useToday">Use Today</button>
             <button class="secondary" type="button" id="importStepsCsv">Import Steps CSV</button>
             <button class="primary" type="button" id="exportCsv">Export Dashboard CSV</button>
+            <button class="danger" type="button" id="clearToday">Delete Today's Entries</button>
             <button class="danger" type="button" id="clearAll">Delete All Entries</button>
             <input class="hidden-input" type="file" id="stepsCsvFile" accept=".csv,text/csv" />
           </div>
@@ -1411,6 +1412,29 @@
 
     document.getElementById('entryForm').addEventListener('submit', (e) => {
       e.preventDefault();
+
+      const hasUsefulData = [
+        exerciseEl.value,
+        durationEl.value,
+        distanceEl.value,
+        glucosePreEl.value,
+        glucosePostEl.value,
+        set1WeightEl.value,
+        set1RepsEl.value,
+        set2WeightEl.value,
+        set2RepsEl.value,
+        set3WeightEl.value,
+        set3RepsEl.value,
+        set4WeightEl.value,
+        set4RepsEl.value,
+        notesEl.value
+      ].some(value => String(value || '').trim() !== '');
+
+      if (!hasUsefulData) {
+        alert('Enter an exercise or workout data before saving.');
+        return;
+      }
+
       const data = load();
       data.push({
         id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
@@ -1477,6 +1501,15 @@
       const text = await file.text();
       importStepsCsvText(text);
       stepsCsvFileEl.value = '';
+    });
+
+    document.getElementById('clearToday').addEventListener('click', () => {
+      const today = todayString();
+      if (!window.confirm(`Delete all entries for ${today}?`)) return;
+
+      const data = load().filter(entry => entry.date !== today);
+      saveEntries(data);
+      render();
     });
 
     document.getElementById('clearAll').addEventListener('click', () => {
