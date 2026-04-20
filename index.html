@@ -492,6 +492,16 @@
           <div class="stat-value" id="latestWaist">—</div>
         </div>
       </div>
+      <div class="form-grid" style="margin-top: 14px;">
+        <div>
+          <label for="glucosePre">Pre-Workout Glucose</label>
+          <input id="glucosePre" type="number" placeholder="110" inputmode="numeric" form="entryForm" />
+        </div>
+        <div>
+          <label for="glucosePost">Post-Workout Glucose</label>
+          <input id="glucosePost" type="number" placeholder="125" inputmode="numeric" form="entryForm" />
+        </div>
+      </div>
     </div>
 
     <div class="grid">
@@ -512,6 +522,7 @@
             <button class="preset-btn" type="button" onclick="presetWorkout('Push','Bench Press', this)">Push<small>Bench / presses / curls</small></button>
             <button class="preset-btn" type="button" onclick="presetWorkout('Pull','Deadlift', this)">Pull<small>Deadlift / rows</small></button>
             <button class="preset-btn" type="button" onclick="presetWorkout('Legs','Squat', this)">Legs<small>Squat / glutes</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Upper Hypertrophy','Incline DB Press', this)">Upper Hypertrophy<small>Recovery-friendly upper pump</small></button>
             <button class="preset-btn" type="button" onclick="presetWorkout('Hypertrophy','Incline DB Press', this)">Hypertrophy<small>Volume + arms</small></button>
             <button class="preset-btn" type="button" onclick="presetWorkout('Circuit','Kettlebell Swings', this)">Circuit<small>KB / sled / ropes</small></button>
             <button class="preset-btn" type="button" onclick="presetWorkout('Cardio','Stationary Bike', this)">Bike / Cardio<small>Bike / Zone 2</small></button>
@@ -542,6 +553,7 @@
                   <option>Push</option>
                   <option>Pull</option>
                   <option>Legs</option>
+                  <option>Upper Hypertrophy</option>
                   <option>Hypertrophy</option>
                   <option>Circuit</option>
                   <option>Cardio</option>
@@ -567,24 +579,34 @@
                   <option value="Bench Press"></option>
                   <option value="Overhead Press"></option>
                   <option value="Incline DB Press"></option>
+                  <option value="Machine Chest Press"></option>
+                  <option value="Cable Chest Press"></option>
                   <option value="Deadlift"></option>
                   <option value="Weighted Pull-Ups"></option>
+                  <option value="Lat Pulldown"></option>
                   <option value="Barbell Rows"></option>
+                  <option value="Seated Cable Row"></option>
                   <option value="Face Pulls"></option>
                   <option value="Barbell Curls"></option>
                   <option value="Incline DB Curls"></option>
                   <option value="Hammer Curls"></option>
+                  <option value="EZ Bar Curl"></option>
                   <option value="Skull Crushers"></option>
                   <option value="Triceps Pushdown"></option>
                   <option value="Overhead Triceps Extension"></option>
                   <option value="Chest Fly"></option>
                   <option value="Lateral Raises"></option>
                   <option value="DB Shoulder Press"></option>
+                  <option value="Rear Delt Fly"></option>
                   <option value="Squat"></option>
                   <option value="Romanian Deadlift"></option>
                   <option value="Hip Thrust"></option>
                   <option value="Walking Lunges"></option>
                   <option value="Leg Curl"></option>
+                  <option value="Leg Extension"></option>
+                  <option value="Standing Calf Raises"></option>
+                  <option value="Weighted Decline Sit-Ups"></option>
+                  <option value="Captain's Chair"></option>
                   <option value="Kettlebell Swings"></option>
                   <option value="Sled Push"></option>
                   <option value="Battle Ropes"></option>
@@ -595,6 +617,8 @@
                   <option value="Stationary Bike"></option>
                   <option value="Zone 2 Bike"></option>
                   <option value="Walk"></option>
+                  <option value="Cable Crunch"></option>
+                  <option value="Hanging Knee Raise"></option>
                   <option value="Mobility"></option>
                 </datalist>
               </div>
@@ -614,33 +638,6 @@
                 <input id="distance" placeholder="2.0 mi or 10 miles bike" />
               </div>
 
-              <div>
-                <label for="body">Body Weight (lb)</label>
-                <div class="stepper">
-                  <button class="step-btn" type="button" data-target="body" data-step="-1">−</button>
-                  <input id="body" type="number" placeholder="225" inputmode="decimal" />
-                  <button class="step-btn" type="button" data-target="body" data-step="1">+</button>
-                </div>
-              </div>
-
-              <div>
-                <label for="waist">Waist (in)</label>
-                <div class="stepper">
-                  <button class="step-btn" type="button" data-target="waist" data-step="-0.5">−</button>
-                  <input id="waist" type="number" placeholder="43.5" inputmode="decimal" />
-                  <button class="step-btn" type="button" data-target="waist" data-step="0.5">+</button>
-                </div>
-              </div>
-
-              <div>
-                <label for="glucosePre">Pre-Workout Glucose</label>
-                <input id="glucosePre" type="number" placeholder="110" inputmode="numeric" />
-              </div>
-
-              <div>
-                <label for="glucosePost">Post-Workout Glucose</label>
-                <input id="glucosePost" type="number" placeholder="125" inputmode="numeric" />
-              </div>
 
               <div id="setLoggingWrap" class="full">
                 <label>Set Logging</label>
@@ -691,14 +688,12 @@
           <h2>Tools</h2>
           <div class="tool-buttons">
             <button class="secondary" type="button" id="useToday">Use Today</button>
-            <button class="secondary" type="button" id="copyLastBody">Copy Last Body Weight</button>
-            <button class="secondary" type="button" id="copyLastWaist">Copy Last Waist</button>
             <button class="secondary" type="button" id="importStepsCsv">Import Steps CSV</button>
-            <button class="secondary" type="button" id="exportCsv">Export CSV</button>
+            <button class="primary" type="button" id="exportCsv">Export Dashboard CSV</button>
             <button class="danger" type="button" id="clearAll">Delete All Entries</button>
             <input class="hidden-input" type="file" id="stepsCsvFile" accept=".csv,text/csv" />
           </div>
-          <p class="helper">Everything saves in your browser on this device.</p>
+          <p class="helper">Everything saves in your browser on this device. Export creates workout rows plus one Daily Metrics row per date for the Workout App Data sheet in your dashboard workbook.</p>
         </div>
 
         <div class="card">
@@ -724,6 +719,7 @@
                 <option>Push</option>
                 <option>Pull</option>
                 <option>Legs</option>
+                <option>Upper Hypertrophy</option>
                 <option>Hypertrophy</option>
                 <option>Circuit</option>
                 <option>Cardio</option>
@@ -754,7 +750,8 @@
     const exerciseMap = {
       Push: ['Bench Press', 'Overhead Press', 'Incline DB Press', 'Lateral Raises', 'Triceps Pushdown'],
       Pull: ['Deadlift', 'Assisted Pull-Ups', 'Barbell Rows', 'Face Pulls', 'Barbell Curls'],
-      Legs: ['Squat', 'Romanian Deadlift', 'Hip Thrust', 'Walking Lunges', 'Leg Curl'],
+      Legs: ['Squat', 'Romanian Deadlift', 'Hip Thrust', 'Walking Lunges', 'Leg Curl', 'Leg Extension', 'Standing Calf Raises', 'Weighted Decline Sit-Ups'],
+      'Upper Hypertrophy': ['Incline DB Press', 'Machine Chest Press', 'DB Shoulder Press', 'Lateral Raises', 'Lat Pulldown', 'Seated Cable Row', 'EZ Bar Curl', 'Triceps Pushdown'],
       Hypertrophy: ['Incline DB Press', 'Chest Fly', 'DB Shoulder Press', 'Lateral Raises', 'Skull Crushers', 'Triceps Pushdown', 'Incline DB Curls', 'Hammer Curls'],
       Circuit: ['Kettlebell Swings', 'Sled Push', 'Battle Ropes', 'Farmer Carry', 'Sandbag Carry', 'Loaded Step-Up', 'Box Jumps'],
       Cardio: ['Stationary Bike', 'Zone 2 Bike', 'Walk'],
@@ -782,7 +779,20 @@
         '2. Romanian Deadlift — 3 × 8-10',
         '3. Hip Thrust — 3 × 8-12',
         '4. Walking Lunges — 3 × 10-12',
-        '5. Leg Curl — 3 × 10-12'
+        '5. Leg Curl — 3 × 10-12 optional if hamstrings are not smoked',
+        '6. Leg Extension — 2 × 12-15 finisher',
+        '7. Standing Calf Raises — 5 × 10-20',
+        '8. Weighted Decline Sit-Ups — 4-5 × 8-12'
+      ],
+      'Upper Hypertrophy': [
+        '1. Incline DB Press — 3 × 8-12',
+        '2. Machine Chest Press — 2 × 10-12',
+        '3. DB Shoulder Press — 3 × 8-12',
+        '4. Lateral Raises — 3 × 12-15',
+        '5. Lat Pulldown — 3 × 8-12',
+        '6. Seated Cable Row — 2 × 10-12',
+        '7. EZ Bar Curl — 2 × 10-12',
+        '8. Triceps Pushdown — 2 × 10-12'
       ],
       Hypertrophy: [
         '1. Incline DB Press — 4 × 8-12',
@@ -855,8 +865,8 @@
         distanceEl.value = '';
       }
     }
-    const bodyEl = document.getElementById('body');
-    const waistEl = document.getElementById('waist');
+    const bodyEl = { value: '' };
+    const waistEl = { value: '' };
     const glucosePreEl = document.getElementById('glucosePre');
     const glucosePostEl = document.getElementById('glucosePost');
     const set1WeightEl = document.getElementById('set1Weight');
@@ -913,19 +923,27 @@
         'Bench Press': { sets: 4, reps: '4-6' },
         'Overhead Press': { sets: 3, reps: '6-8' },
         'Incline DB Press': { sets: 4, reps: '8-12' },
+        'Machine Chest Press': { sets: 2, reps: '10-12' },
+        'Cable Chest Press': { sets: 3, reps: '10-15' },
         'Deadlift': { sets: 4, reps: '3-5' },
         'Weighted Pull-Ups': { sets: 3, reps: '4-6' },
+        'Lat Pulldown': { sets: 3, reps: '8-12' },
         'Assisted Pull-Ups': { sets: 3, reps: '6-8' },
         'Barbell Rows': { sets: 3, reps: '8-10' },
+        'Seated Cable Row': { sets: 2, reps: '10-12' },
         'Face Pulls': { sets: 3, reps: '12-15' },
         'Squat': { sets: 4, reps: '4-6' },
         'Romanian Deadlift': { sets: 3, reps: '8-10' },
         'Hip Thrust': { sets: 3, reps: '8-12' },
         'Walking Lunges': { sets: 3, reps: '10-12' },
         'Leg Curl': { sets: 3, reps: '10-12' },
-        'DB Shoulder Press': { sets: 3, reps: '8-10' },
+        'Leg Extension': { sets: 2, reps: '12-15' },
+        'Standing Calf Raises': { sets: 5, reps: '10-20' },
+        'Weighted Decline Sit-Ups': { sets: 5, reps: '8-12' },
+        'DB Shoulder Press': { sets: 3, reps: '8-12' },
         'Lateral Raises': { sets: 3, reps: '12-15' },
         'Chest Fly': { sets: 3, reps: '10-12' },
+        'Rear Delt Fly': { sets: 3, reps: '12-20' },
         'Kettlebell Swings': { sets: 3, reps: '15' },
         'Sled Push': { sets: 4, reps: '30 sec' },
         'Battle Ropes': { sets: 4, reps: '30 sec' },
@@ -935,10 +953,14 @@
         'Loaded Step-Up': { sets: 3, reps: '8-10' },
         'Box Jumps': { sets: 3, reps: '8-10' },
         'Skull Crushers': { sets: 3, reps: '10-12' },
-        'Triceps Pushdown': { sets: 3, reps: '10-12' },
+        'Triceps Pushdown': { sets: 2, reps: '10-12' },
         'Overhead Triceps Extension': { sets: 3, reps: '10-12' },
         'Incline DB Curls': { sets: 3, reps: '10-12' },
-        'Hammer Curls': { sets: 3, reps: '10-12' }
+        'Hammer Curls': { sets: 3, reps: '10-12' },
+        'EZ Bar Curl': { sets: 2, reps: '10-12' },
+        'Cable Crunch': { sets: 3, reps: '12-15' },
+        'Hanging Knee Raise': { sets: 3, reps: '10-15' },
+        "Captain's Chair": { sets: 3, reps: '10-15' }
       };
     }
 
@@ -1070,12 +1092,13 @@
 
     function setupDraftAutosave() {
       const form = document.getElementById('entryForm');
-      form.addEventListener('input', () => {
-        saveDraft(getDraftFromForm());
-      });
-      form.addEventListener('change', () => {
-        saveDraft(getDraftFromForm());
-      });
+      const save = () => saveDraft(getDraftFromForm());
+      form.addEventListener('input', save);
+      form.addEventListener('change', save);
+      glucosePreEl.addEventListener('input', save);
+      glucosePreEl.addEventListener('change', save);
+      glucosePostEl.addEventListener('input', save);
+      glucosePostEl.addEventListener('change', save);
     }
 
     function formatValue(value, suffix = '') {
@@ -1133,6 +1156,10 @@
       updateExerciseRecommendation(exercise);
       updateExerciseHistory(exercise);
       updateSetHistory(exercise);
+
+      if (type === 'Upper Hypertrophy') {
+        notesEl.value = 'Recovery-friendly upper pump day after legs. Keep effort around RPE 7-8, rest 60-90 sec, and avoid maxing out.';
+      }
 
       if (type === 'Hypertrophy') {
         notesEl.value = 'Template: Incline DB Press, Chest Fly, DB Shoulder Press, Lateral Raises, Skull Crushers or Triceps Pushdown, Incline DB Curls, Hammer Curls';
@@ -1257,11 +1284,22 @@
           type: 'Cardio',
           ex: 'Imported Steps',
           w: '',
+          sets: '',
           r: '',
           du: '',
           di: '',
           bw: '',
           wa: '',
+          gpre: '',
+          gpost: '',
+          s1w: '',
+          s1r: '',
+          s2w: '',
+          s2r: '',
+          s3w: '',
+          s3r: '',
+          s4w: '',
+          s4r: '',
           n: `Imported steps: ${stepsValue}`,
           steps: stepsValue
         });
@@ -1304,7 +1342,10 @@
             <span class="tag">${d.type || 'Custom'}</span>
           </div>
           <div class="meta-grid">
-            <div class="meta-box"><div class="meta-label">Top Set</div><div class="meta-value">${(d.s1w || d.s1r) ? `${d.s1w || '—'}${d.s1w ? ' lb' : ''} × ${d.s1r || '—'}` : '—'}</div></div>
+            <div class="meta-box"><div class="meta-label">Set 1</div><div class="meta-value">${(d.s1w || d.s1r) ? `${d.s1w || '—'}${d.s1w ? ' lb' : ''} × ${d.s1r || '—'}` : '—'}</div></div>
+            <div class="meta-box"><div class="meta-label">Set 2</div><div class="meta-value">${(d.s2w || d.s2r) ? `${d.s2w || '—'}${d.s2w ? ' lb' : ''} × ${d.s2r || '—'}` : '—'}</div></div>
+            <div class="meta-box"><div class="meta-label">Set 3</div><div class="meta-value">${(d.s3w || d.s3r) ? `${d.s3w || '—'}${d.s3w ? ' lb' : ''} × ${d.s3r || '—'}` : '—'}</div></div>
+            <div class="meta-box"><div class="meta-label">Set 4</div><div class="meta-value">${(d.s4w || d.s4r) ? `${d.s4w || '—'}${d.s4w ? ' lb' : ''} × ${d.s4r || '—'}` : '—'}</div></div>
             <div class="meta-box"><div class="meta-label">Duration</div><div class="meta-value">${formatValue(d.du, ' min')}</div></div>
             <div class="meta-box"><div class="meta-label">Distance</div><div class="meta-value">${formatValue(d.di)}</div></div>
             <div class="meta-box"><div class="meta-label">Body Weight</div><div class="meta-value">${formatValue(d.bw, ' lb')}</div></div>
@@ -1379,15 +1420,6 @@
     document.getElementById('stickyClear').addEventListener('click', resetForm);
     document.getElementById('useToday').addEventListener('click', () => { dateEl.value = todayString(); });
 
-    document.getElementById('copyLastBody').addEventListener('click', () => {
-      const last = [...load()].reverse().find(d => d.bw !== '');
-      if (last) bodyEl.value = last.bw;
-    });
-
-    document.getElementById('copyLastWaist').addEventListener('click', () => {
-      const last = [...load()].reverse().find(d => d.wa !== '');
-      if (last) waistEl.value = last.wa;
-    });
 
     importStepsCsvBtn.addEventListener('click', () => {
       stepsCsvFileEl.click();
@@ -1429,52 +1461,77 @@
         'Set 3 Reps',
         'Set 4 Weight',
         'Set 4 Reps',
-        'Duration',
+        'Duration (min)',
         'Distance',
         'Notes',
-        'Body Weight',
-        'Waist',
+        'Body Weight (lb)',
+        'Waist (in)',
         'Pre Glucose',
-        'Post Glucose'
+        'Post Glucose',
+        'Steps'
       ];
 
-      const workoutRows = data.map(d => {
-        const topSet = (d.s1w || d.s1r) ? `${d.s1w || '—'}${d.s1w ? ' lb' : ''} × ${d.s1r || '—'}` : '';
-        return [
-          'Workout',
-          d.date,
-          d.day,
-          d.type,
-          d.ex,
-          topSet,
-          d.s1w,
-          d.s1r,
-          d.s2w,
-          d.s2r,
-          d.s3w,
-          d.s3r,
-          d.s4w,
-          d.s4r,
-          d.du,
-          d.di,
-          d.n,
-          '',
-          '',
-          '',
-          ''
-        ];
-      });
+      const workoutRows = data
+        .filter(d => !d.steps)
+        .map(d => {
+          const topSet = (d.s1w || d.s1r) ? `${d.s1w || '—'}${d.s1w ? ' lb' : ''} × ${d.s1r || '—'}` : '';
+          return [
+            'Workout',
+            d.date,
+            d.day,
+            d.type,
+            d.ex,
+            topSet,
+            d.s1w,
+            d.s1r,
+            d.s2w,
+            d.s2r,
+            d.s3w,
+            d.s3r,
+            d.s4w,
+            d.s4r,
+            d.du,
+            d.di,
+            d.n,
+            '',
+            '',
+            '',
+            '',
+            ''
+          ];
+        });
 
-      const dailyMetricMap = new Map();
-      [...data].reverse().forEach(d => {
-        const hasMetrics = d.bw || d.wa || d.gpre || d.gpost;
-        if (!hasMetrics) return;
-        if (!dailyMetricMap.has(d.date)) {
-          dailyMetricMap.set(d.date, d);
+      const metricsByDate = new Map();
+
+      [...data].forEach(d => {
+        if (!d.date) return;
+
+        if (!metricsByDate.has(d.date)) {
+          metricsByDate.set(d.date, {
+            date: d.date,
+            day: d.day || 'Off Day',
+            bw: '',
+            wa: '',
+            gpre: '',
+            gpost: '',
+            steps: '',
+            notes: ''
+          });
         }
+
+        const current = metricsByDate.get(d.date);
+
+        if (d.day) current.day = d.day;
+        if (d.bw) current.bw = d.bw;
+        if (d.wa) current.wa = d.wa;
+        if (d.gpre) current.gpre = d.gpre;
+        if (d.gpost) current.gpost = d.gpost;
+        if (d.steps) current.steps = d.steps;
+        if (d.n) current.notes = d.n;
       });
 
-      const metricRows = [...dailyMetricMap.values()]
+      const metricRows = [...metricsByDate.values()]
+        .filter(d => d.bw || d.wa || d.gpre || d.gpost || d.steps)
         .sort((a, b) => String(a.date).localeCompare(String(b.date)))
         .map(d => [
           'Daily Metrics',
@@ -1493,11 +1550,12 @@
           '',
           '',
           '',
-          d.n,
+          d.notes,
           d.bw,
           d.wa,
           d.gpre,
-          d.gpost
+          d.gpost,
+          d.steps
         ]);
 
       const csv = [headers, ...workoutRows, ...metricRows]
@@ -1507,7 +1565,7 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'workout-tracker.csv';
+      link.download = 'workout-app-data-import.csv';
       link.click();
       URL.revokeObjectURL(url);
     });
