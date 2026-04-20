@@ -700,6 +700,7 @@
             <button class="secondary" type="button" id="useToday">Use Today</button>
             <button class="secondary" type="button" id="importStepsCsv">Import Steps CSV</button>
             <button class="primary" type="button" id="exportCsv">Export Dashboard CSV</button>
+            <button class="danger" type="button" id="clearBlank">Delete Blank Entries</button>
             <button class="danger" type="button" id="clearToday">Delete Today's Entries</button>
             <button class="danger" type="button" id="clearAll">Delete All Entries</button>
             <input class="hidden-input" type="file" id="stepsCsvFile" accept=".csv,text/csv" />
@@ -1503,6 +1504,36 @@
       stepsCsvFileEl.value = '';
     });
 
+    document.getElementById('clearBlank').addEventListener('click', () => {
+      if (!window.confirm('Delete all blank or no-exercise entries?')) return;
+
+      const data = load().filter(entry => {
+        const hasExercise = String(entry.ex || '').trim() !== '';
+        const hasOtherData = [
+          entry.du,
+          entry.di,
+          entry.bw,
+          entry.wa,
+          entry.gpre,
+          entry.gpost,
+          entry.s1w,
+          entry.s1r,
+          entry.s2w,
+          entry.s2r,
+          entry.s3w,
+          entry.s3r,
+          entry.s4w,
+          entry.s4r,
+          entry.n,
+          entry.steps
+        ].some(value => String(value || '').trim() !== '');
+
+        return hasExercise || hasOtherData;
+      });
+
+      saveEntries(data);
+      render();
+    });
     document.getElementById('clearToday').addEventListener('click', () => {
       const today = todayString();
       if (!window.confirm(`Delete all entries for ${today}?`)) return;
