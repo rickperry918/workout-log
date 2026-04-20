@@ -399,6 +399,13 @@
       gap: 8px;
     }
 
+    .log-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
     .meta-box {
       background: #0d1728;
       border: 1px solid #21314a;
@@ -443,9 +450,12 @@
     @media (max-width: 980px) {
       .grid,
       .stats,
-      .filter-grid,
-      .meta-grid {
+      .filter-grid {
         grid-template-columns: 1fr;
+      }
+
+      .meta-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .sticky-bar { display: flex; }
@@ -1105,6 +1115,29 @@
       return value !== '' && value !== null && value !== undefined ? `${value}${suffix}` : '—';
     }
 
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function formatSetValue(weight, reps) {
+      if (!weight && !reps) return '';
+      return `${weight || '—'}${weight ? ' lb' : ''} × ${reps || '—'}`;
+    }
+
+    function buildMetaBox(label, value) {
+      return `
+        <div class="meta-box">
+          <div class="meta-label">${escapeHtml(label)}</div>
+          <div class="meta-value">${escapeHtml(value)}</div>
+        </div>
+      `;
+    }
+
     function updateStats(data) {
       document.getElementById('totalEntries').textContent = data.length;
       document.getElementById('uniqueExercises').textContent = new Set(data.map(d => (d.ex || '').trim().toLowerCase()).filter(Boolean)).size;
@@ -1332,35 +1365,48 @@
         return;
       }
 
-      logEl.innerHTML = `<div class="log-list">${filtered.map(d => `
-        <div class="log-card">
-          <div class="log-top">
-            <div>
-              <div class="log-title">${d.ex || 'No exercise entered'}</div>
-              <div class="log-sub">${d.date} · ${d.day}</div>
+      logEl.innerHTML = `<div class="log-list">${filtered.map(d => {
+        const setBoxes = [
+          ['Set 1', formatSetValue(d.s1w, d.s1r)],
+          ['Set 2', formatSetValue(d.s2w, d.s2r)],
+          ['Set 3', formatSetValue(d.s3w, d.s3r)],
+          ['Set 4', formatSetValue(d.s4w, d.s4r)]
+        ]
+          .filter(([, value]) => value)
+          .map(([label, value]) => buildMetaBox(label, value));
+
+        const metricBoxes = [];
+
+        if (d.du) metricBoxes.push(buildMetaBox('Duration', `${d.du} min`));
+        if (d.di) metricBoxes.push(buildMetaBox('Distance', d.di));
+        if (d.bw) metricBoxes.push(buildMetaBox('Body Weight', `${d.bw} lb`));
+        if (d.wa) metricBoxes.push(buildMetaBox('Waist', `${d.wa} in`));
+        if (d.gpre) metricBoxes.push(buildMetaBox('Pre Glucose', d.gpre));
+        if (d.gpost) metricBoxes.push(buildMetaBox('Post Glucose', d.gpost));
+        if (d.steps) metricBoxes.push(buildMetaBox('Steps', d.steps));
+
+        const allBoxes = [...setBoxes, ...metricBoxes];
+        const notesHtml = d.n
+          ? `<div class="helper" style="margin-top:10px;">Notes: ${escapeHtml(d.n)}</div>`
+          : '';
+
+        return `
+          <div class="log-card">
+            <div class="log-top">
+              <div>
+                <div class="log-title">${escapeHtml(d.ex || 'No exercise entered')}</div>
+                <div class="log-sub">${escapeHtml(d.date)} · ${escapeHtml(d.day)}</div>
+              </div>
+              <span class="tag">${escapeHtml(d.type || 'Custom')}</span>
             </div>
-            <span class="tag">${d.type || 'Custom'}</span>
+            ${allBoxes.length ? `<div class="meta-grid">${allBoxes.join('')}</div>` : ''}
+            ${notesHtml}
+            <div class="log-actions">
+              <button class="danger" type="button" onclick="deleteEntry('${d.id}')">Delete</button>
+            </div>
           </div>
-          <div class="meta-grid">
-            <div class="meta-box"><div class="meta-label">Set 1</div><div class="meta-value">${(d.s1w || d.s1r) ? `${d.s1w || '—'}${d.s1w ? ' lb' : ''} × ${d.s1r || '—'}` : '—'}</div></div>
-            <div class="meta-box"><div class="meta-label">Set 2</div><div class="meta-value">${(d.s2w || d.s2r) ? `${d.s2w || '—'}${d.s2w ? ' lb' : ''} × ${d.s2r || '—'}` : '—'}</div></div>
-            <div class="meta-box"><div class="meta-label">Set 3</div><div class="meta-value">${(d.s3w || d.s3r) ? `${d.s3w || '—'}${d.s3w ? ' lb' : ''} × ${d.s3r || '—'}` : '—'}</div></div>
-            <div class="meta-box"><div class="meta-label">Set 4</div><div class="meta-value">${(d.s4w || d.s4r) ? `${d.s4w || '—'}${d.s4w ? ' lb' : ''} × ${d.s4r || '—'}` : '—'}</div></div>
-            <div class="meta-box"><div class="meta-label">Duration</div><div class="meta-value">${formatValue(d.du, ' min')}</div></div>
-            <div class="meta-box"><div class="meta-label">Distance</div><div class="meta-value">${formatValue(d.di)}</div></div>
-            <div class="meta-box"><div class="meta-label">Body Weight</div><div class="meta-value">${formatValue(d.bw, ' lb')}</div></div>
-            <div class="meta-box"><div class="meta-label">Waist</div><div class="meta-value">${formatValue(d.wa, ' in')}</div></div>
-            <div class="meta-box"><div class="meta-label">Pre Glucose</div><div class="meta-value">${formatValue(d.gpre)}</div></div>
-            <div class="meta-box"><div class="meta-label">Post Glucose</div><div class="meta-value">${formatValue(d.gpost)}</div></div>
-            <div class="meta-box"><div class="meta-label">Steps</div><div class="meta-value">${formatValue(d.steps)}</div></div>
-          </div>
-          
-          ${d.n ? `<div class="helper" style="margin-top:10px;">Notes: ${d.n}</div>` : ''}
-          <div class="action-row" style="margin-top:12px;">
-            <button class="danger" type="button" onclick="deleteEntry('${d.id}')">Delete</button>
-          </div>
-        </div>
-      `).join('')}</div>`;
+        `;
+      }).join('')}</div>`;
     }
 
     document.getElementById('entryForm').addEventListener('submit', (e) => {
