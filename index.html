@@ -541,21 +541,21 @@
 
           <h3>Day Type</h3>
           <div class="button-grid-3" id="dayButtons">
-            <button class="preset-btn" type="button" onclick="setDayOnly('AM Shift', this)">AM Shift</button>
-            <button class="preset-btn" type="button" onclick="setDayOnly('PM Shift', this)">PM Shift</button>
-            <button class="preset-btn active" type="button" onclick="setDayOnly('Off Day', this)">Off Day</button>
+            <button class="preset-btn" type="button" onclick="setDayOnly('AM Shift', this); document.getElementById('target-carbs').innerText = '175';">AM Shift</button>
+            <button class="preset-btn" type="button" onclick="setDayOnly('PM Shift', this); document.getElementById('target-carbs').innerText = '175';">PM Shift</button>
+            <button class="preset-btn active" type="button" onclick="setDayOnly('Off Day', this); document.getElementById('target-carbs').innerText = '75';">Off Day</button>
           </div>
 
           <h3 style="margin-top:14px;">Workout Type</h3>
           <div class="button-grid-3" id="workoutButtons">
-            <button class="preset-btn" type="button" onclick="presetWorkout('Push','Bench Press', this)">Push<small>Bench / presses / curls</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Pull','Deadlift', this)">Pull<small>Deadlift / rows</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Legs','Squat', this)">Legs<small>Squat / glutes</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Upper Hypertrophy','Incline DB Press', this)">Upper Hypertrophy<small>Recovery-friendly upper pump</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Hypertrophy','Incline DB Press', this)">Hypertrophy<small>Volume + arms</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Circuit','Kettlebell Swings', this)">Circuit<small>KB / sled / ropes</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Cardio','Stationary Bike', this)">Bike / Cardio<small>Bike / Zone 2</small></button>
-            <button class="preset-btn active" type="button" onclick="presetWorkout('Custom','', this)">Custom<small>Anything you want</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Push','Bench Press', this); document.getElementById('target-carbs').innerText = '175';">Push<small>Bench / presses / curls</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Pull','Deadlift', this); document.getElementById('target-carbs').innerText = '175';">Pull<small>Deadlift / rows</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Legs','Squat', this); document.getElementById('target-carbs').innerText = '175';">Legs<small>Squat / glutes</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Upper Hypertrophy','Incline DB Press', this); document.getElementById('target-carbs').innerText = '175';">Upper Hypertrophy<small>Recovery-friendly upper pump</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Hypertrophy','Incline DB Press', this); document.getElementById('target-carbs').innerText = '175';">Hypertrophy<small>Volume + arms</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Circuit','Kettlebell Swings', this); document.getElementById('target-carbs').innerText = '175';">Circuit<small>KB / sled / ropes</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Cardio','Stationary Bike', this); document.getElementById('target-carbs').innerText = '75';">Bike / Cardio<small>Bike / Zone 2</small></button>
+            <button class="preset-btn active" type="button" onclick="presetWorkout('Custom','', this); document.getElementById('target-carbs').innerText = '175';">Custom<small>Anything you want</small></button>
           </div>
         </div>
 
