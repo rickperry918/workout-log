@@ -512,6 +512,25 @@
           <input id="glucosePost" type="number" placeholder="125" inputmode="numeric" form="entryForm" />
         </div>
       </div>
+
+      <div id="metabolicDashboard" style="margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border);">
+        <h3 style="margin-bottom: 10px;">Metabolic Status</h3>
+        <div class="stats" style="grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 0;">
+          <div class="stat">
+            <div class="stat-label">Protein Target</div>
+            <div class="stat-value" id="metaProtein">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Carbs Target</div>
+            <div class="stat-value" id="metaCarbs">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Body Water %</div>
+            <div class="stat-value">49.5%</div>
+          </div>
+        </div>
+        <div id="metaAdvice" class="helper" style="margin-top: 12px; font-size: 0.85rem; line-height: 1.4;"></div>
+      </div>
     </div>
 
     <div class="grid">
@@ -758,6 +777,51 @@
   <script>
     const KEY = 'tracker';
     const DRAFT_KEY = 'trackerDraft';
+
+    const USER_GOALS = {
+      protein: 190,
+      baseCarbs: 75,
+      workoutCarbs: 175
+    };
+
+    function calculateDailyTargets(hasWorkout, shiftType) {
+      const targets = {
+        protein: USER_GOALS.protein,
+        carbs: hasWorkout ? USER_GOALS.workoutCarbs : USER_GOALS.baseCarbs,
+        advice: ''
+      };
+
+      if (shiftType === 'AM Shift') {
+        targets.advice = 'AM Shift: Pre-load carbs before your shift. Focus on protein later in the day.';
+      } else if (shiftType === 'PM Shift') {
+        targets.advice = 'PM Shift: Keep carbs low during the day. Eat your carbs post-shift or pre-workout.';
+      } else {
+        targets.advice = 'Off Day: Evenly distribute your meals. Adjust carbs based on activity level.';
+      }
+
+      return targets;
+    }
+
+    function refreshMetabolicDashboard() {
+      const data = typeof load === 'function' ? load() : [];
+      const selectedDate = document.getElementById('date')?.value || new Date().toISOString().split('T')[0];
+      const entriesForDate = data.filter(d => d.date === selectedDate);
+      const hasWorkoutEntry = entriesForDate.some(d => d.type !== 'Recovery');
+      
+      const typeElVal = document.getElementById('type')?.value;
+      const hasWorkout = hasWorkoutEntry || (typeElVal && typeElVal !== 'Recovery');
+      const shiftType = document.getElementById('day')?.value || 'Off Day';
+
+      const targets = calculateDailyTargets(hasWorkout, shiftType);
+      
+      const metaProteinEl = document.getElementById('metaProtein');
+      const metaCarbsEl = document.getElementById('metaCarbs');
+      const metaAdviceEl = document.getElementById('metaAdvice');
+      
+      if (metaProteinEl) metaProteinEl.textContent = targets.protein + 'g';
+      if (metaCarbsEl) metaCarbsEl.textContent = targets.carbs + 'g';
+      if (metaAdviceEl) metaAdviceEl.textContent = targets.advice;
+    }
 
     const exerciseMap = {
       Push: ['Bench Press', 'Overhead Press', 'Incline DB Press', 'Lateral Raises', 'Triceps Pushdown'],
@@ -1173,6 +1237,7 @@
       dayEl.value = day;
       clearActive('dayButtons');
       if (btn) btn.classList.add('active');
+      if (typeof refreshMetabolicDashboard === 'function') refreshMetabolicDashboard();
     }
 
     function presetWorkout(type, exercise, btn) {
@@ -1349,6 +1414,7 @@
     function render() {
       const data = load();
       updateStats(data);
+      refreshMetabolicDashboard();
 
       const search = document.getElementById('search').value.trim().toLowerCase();
       const filterDay = document.getElementById('filterDay').value;
@@ -1719,10 +1785,13 @@ chipsEl.addEventListener('click', (e) => {
       updateSetHistory(exerciseEl.value);
       updateConditionalFields(typeEl.value);
     });
+    dateEl.addEventListener('change', refreshMetabolicDashboard);
+    dayEl.addEventListener('change', refreshMetabolicDashboard);
     typeEl.addEventListener('change', () => {
       updateExerciseChips();
       updateWorkoutPreview(typeEl.value);
       updateConditionalFields(typeEl.value);
+      refreshMetabolicDashboard();
     });
     document.getElementById('search').addEventListener('input', render);
     document.getElementById('filterDay').addEventListener('change', render);
