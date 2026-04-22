@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Workout Log</title>
   <style>
     :root {
@@ -171,6 +174,24 @@
       box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.38), 0 0 0 2px rgba(34, 197, 94, 0.12);
     }
 
+    .fatigue-chip.low {
+      border-color: #7f1d1d;
+      background: rgba(239, 68, 68, 0.14);
+      color: #fecaca;
+    }
+
+    .fatigue-chip.normal {
+      border-color: #854d0e;
+      background: rgba(234, 179, 8, 0.14);
+      color: #fde68a;
+    }
+
+    .fatigue-chip.high {
+      border-color: #166534;
+      background: rgba(34, 197, 94, 0.14);
+      color: #dcfce7;
+    }
+
     .preset-btn:active,
     .chip:active {
       border-color: var(--accent);
@@ -286,6 +307,48 @@
       font-size: 0.8rem;
       line-height: 1.35;
       margin-top: 4px;
+    }
+
+    .cycle-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .cycle-day {
+      background: #0d1728;
+      border: 1px solid #21314a;
+      border-radius: 12px;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .cycle-day.active {
+      border-color: var(--accent);
+      background: rgba(34, 197, 94, 0.14);
+      box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.2);
+    }
+
+    .cycle-day-label {
+      color: var(--muted);
+      font-size: 0.72rem;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .cycle-day-value {
+      font-size: 0.88rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .cycle-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
     }
 
     .exercise-recommendation {
@@ -458,6 +521,10 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .cycle-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .sticky-bar { display: flex; }
     }
 
@@ -541,21 +608,41 @@
 
           <h3>Day Type</h3>
           <div class="button-grid-3" id="dayButtons">
-            <button class="preset-btn" type="button" onclick="setDayOnly('AM Shift', this); document.getElementById('target-carbs').innerText = '175';">AM Shift</button>
-            <button class="preset-btn" type="button" onclick="setDayOnly('PM Shift', this); document.getElementById('target-carbs').innerText = '175';">PM Shift</button>
-            <button class="preset-btn active" type="button" onclick="setDayOnly('Off Day', this); document.getElementById('target-carbs').innerText = '75';">Off Day</button>
+            <button class="preset-btn" type="button" onclick="setDayOnly('AM Shift', this);">AM Shift</button>
+            <button class="preset-btn" type="button" onclick="setDayOnly('PM Shift', this);">PM Shift</button>
+            <button class="preset-btn active" type="button" onclick="setDayOnly('Off Day', this);">Off Day</button>
+          </div>
+
+          <div style="margin-top:14px;">
+            <h3>8-Day Cycle</h3>
+            <div class="meta-grid" style="margin-top: 10px;">
+              <div class="meta-box">
+                <div class="meta-label">Current Day</div>
+                <div class="meta-value" id="cycleCurrent">Day 1 Push (Bench Press)</div>
+              </div>
+              <div class="meta-box">
+                <div class="meta-label">Next Day</div>
+                <div class="meta-value" id="cycleNext">Day 2 Pull (Assisted Pull-Ups)</div>
+              </div>
+            </div>
+            <div class="cycle-grid" id="cycleGrid"></div>
+            <div class="cycle-actions">
+              <button class="secondary" type="button" id="cycleApplyToday" onclick="applyCycleDayToForm(); return false;">Apply to Form</button>
+              <button class="primary" type="button" id="cycleAdvance" onclick="advanceCycleDay(); return false;">Advance Day</button>
+              <button class="secondary" type="button" id="cycleReset" onclick="resetCycleDay(); return false;">Reset to Day 1</button>
+            </div>
           </div>
 
           <h3 style="margin-top:14px;">Workout Type</h3>
           <div class="button-grid-3" id="workoutButtons">
-            <button class="preset-btn" type="button" onclick="presetWorkout('Push','Bench Press', this); document.getElementById('target-carbs').innerText = '175';">Push<small>Bench / presses / curls</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Pull','Deadlift', this); document.getElementById('target-carbs').innerText = '175';">Pull<small>Deadlift / rows</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Legs','Squat', this); document.getElementById('target-carbs').innerText = '175';">Legs<small>Squat / glutes</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Upper Hypertrophy','Incline DB Press', this); document.getElementById('target-carbs').innerText = '175';">Upper Hypertrophy<small>Recovery-friendly upper pump</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Hypertrophy','Incline DB Press', this); document.getElementById('target-carbs').innerText = '175';">Hypertrophy<small>Volume + arms</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Circuit','Kettlebell Swings', this); document.getElementById('target-carbs').innerText = '175';">Circuit<small>KB / sled / ropes</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Cardio','Stationary Bike', this); document.getElementById('target-carbs').innerText = '75';">Bike / Cardio<small>Bike / Zone 2</small></button>
-            <button class="preset-btn active" type="button" onclick="presetWorkout('Custom','', this); document.getElementById('target-carbs').innerText = '175';">Custom<small>Anything you want</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Push','Bench Press', this);">Push<small>Strength press day</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Pull','Assisted Pull-Ups', this);">Pull<small>Rows / pull-up work</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Legs','Squat', this);">Legs<small>Controlled lower work</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Upper Hypertrophy','Incline DB Press', this);">Upper Hypertrophy<small>Pump, not failure</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Recovery','Walk', this);">Recovery<small>Walk / mobility / easy day</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Cardio','Zone 2 Bike', this);">Zone 2 Cardio<small>Bike / walk / easy pace</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Circuit','Kettlebell Swings', this);">Circuit<small>Optional conditioning</small></button>
+            <button class="preset-btn active" type="button" onclick="presetWorkout('Custom','', this);">Custom<small>Anything you want</small></button>
           </div>
         </div>
 
@@ -583,10 +670,9 @@
                   <option>Pull</option>
                   <option>Legs</option>
                   <option>Upper Hypertrophy</option>
-                  <option>Hypertrophy</option>
-                  <option>Circuit</option>
                   <option>Cardio</option>
                   <option>Recovery</option>
+                  <option>Circuit</option>
                   <option selected>Custom</option>
                 </select>
               </div>
@@ -612,8 +698,10 @@
                   <option value="Cable Chest Press"></option>
                   <option value="Deadlift"></option>
                   <option value="Weighted Pull-Ups"></option>
+                  <option value="Assisted Pull-Ups"></option>
                   <option value="Lat Pulldown"></option>
                   <option value="Barbell Rows"></option>
+                  <option value="Single Arm DB Row"></option>
                   <option value="Seated Cable Row"></option>
                   <option value="Face Pulls"></option>
                   <option value="Barbell Curls"></option>
@@ -646,6 +734,7 @@
                   <option value="Stationary Bike"></option>
                   <option value="Zone 2 Bike"></option>
                   <option value="Walk"></option>
+                  <option value="Recovery Walk"></option>
                   <option value="Cable Crunch"></option>
                   <option value="Hanging Knee Raise"></option>
                   <option value="Mobility"></option>
@@ -696,6 +785,16 @@
                     <div id="set4History" class="set-log-history"></div>
                   </div>
                 </div>
+              </div>
+
+              <div class="full">
+                <label>Fatigue / Readiness</label>
+                <div class="chips" id="fatigueChips">
+                  <button class="chip fatigue-chip low" type="button" data-fatigue="Beat Up">Beat Up</button>
+                  <button class="chip fatigue-chip normal active" type="button" data-fatigue="Normal">Normal</button>
+                  <button class="chip fatigue-chip high" type="button" data-fatigue="Strong">Strong</button>
+                </div>
+                <div class="helper">Track how you feel so we can catch fatigue early and keep the plan consistent.</div>
               </div>
 
               <div class="full">
@@ -751,7 +850,6 @@
                 <option>Pull</option>
                 <option>Legs</option>
                 <option>Upper Hypertrophy</option>
-                <option>Hypertrophy</option>
                 <option>Circuit</option>
                 <option>Cardio</option>
                 <option>Recovery</option>
@@ -777,26 +875,61 @@
   <script>
     const KEY = 'tracker';
     const DRAFT_KEY = 'trackerDraft';
+    const CYCLE_KEY = 'trackerCycleState';
+
+    const EIGHT_DAY_CYCLE = [
+      { label: 'Day 1', type: 'Push', exercise: 'Bench Press' },
+      { label: 'Day 2', type: 'Pull', exercise: 'Assisted Pull-Ups' },
+      { label: 'Day 3', type: 'Legs', exercise: 'Squat' },
+      { label: 'Day 4', type: 'Recovery', exercise: 'Walk' },
+      { label: 'Day 5', type: 'Upper Hypertrophy', exercise: 'Incline DB Press' },
+      { label: 'Day 6', type: 'Cardio', exercise: 'Zone 2 Bike' },
+      { label: 'Day 7', type: 'Recovery', exercise: 'Walk' },
+      { label: 'Day 8', type: 'Custom', exercise: '' }
+    ];
 
     const USER_GOALS = {
       protein: 190,
-      baseCarbs: 75,
-      workoutCarbs: 175
+      offLowCarbs: 75,
+      offNormalCarbs: 100,
+      workdayCarbs: 110,
+      recoveryCarbs: 110,
+      trainingCarbs: 165,
+      legsCarbs: 200
     };
 
-    function calculateDailyTargets(hasWorkout, shiftType) {
+    function calculateDailyTargets(hasWorkout, shiftType, workoutType) {
+      const type = workoutType || 'Custom';
       const targets = {
         protein: USER_GOALS.protein,
-        carbs: hasWorkout ? USER_GOALS.workoutCarbs : USER_GOALS.baseCarbs,
+        carbs: USER_GOALS.offNormalCarbs,
         advice: ''
       };
 
-      if (shiftType === 'AM Shift') {
-        targets.advice = 'AM Shift: Pre-load carbs before your shift. Focus on protein later in the day.';
-      } else if (shiftType === 'PM Shift') {
-        targets.advice = 'PM Shift: Keep carbs low during the day. Eat your carbs post-shift or pre-workout.';
+      if (type === 'Legs') {
+        targets.carbs = USER_GOALS.legsCarbs;
+      } else if (type === 'Push' || type === 'Pull' || type === 'Upper Hypertrophy' || type === 'Circuit' || type === 'Cardio' || hasWorkout) {
+        targets.carbs = USER_GOALS.trainingCarbs;
+      } else if (type === 'Recovery') {
+        targets.carbs = USER_GOALS.recoveryCarbs;
+      } else if (shiftType === 'AM Shift' || shiftType === 'PM Shift') {
+        targets.carbs = USER_GOALS.workdayCarbs;
       } else {
-        targets.advice = 'Off Day: Evenly distribute your meals. Adjust carbs based on activity level.';
+        targets.carbs = USER_GOALS.offNormalCarbs;
+      }
+
+      if (type === 'Legs') {
+        targets.advice = 'Leg day: Higher carbs for performance and recovery. Put most carbs around training.';
+      } else if (type === 'Recovery') {
+        targets.advice = 'Recovery day: Moderate carbs support recovery. Walk after meals and keep food quality high.';
+      } else if (type === 'Push' || type === 'Pull' || type === 'Upper Hypertrophy' || type === 'Circuit' || type === 'Cardio' || hasWorkout) {
+        targets.advice = 'Training day: Fuel performance with carbs around the workout and keep protein high.';
+      } else if (shiftType === 'AM Shift') {
+        targets.advice = 'AM Shift: Active work day. Moderate carbs fit your step count and recovery needs.';
+      } else if (shiftType === 'PM Shift') {
+        targets.advice = 'PM Shift: Moderate carbs are appropriate for work activity. Walk after meals when you can.';
+      } else {
+        targets.advice = 'Off day: Use a moderate carb intake, not a crash-low day, unless activity is truly low.';
       }
 
       return targets;
@@ -806,13 +939,16 @@
       const data = typeof load === 'function' ? load() : [];
       const selectedDate = document.getElementById('date')?.value || new Date().toISOString().split('T')[0];
       const entriesForDate = data.filter(d => d.date === selectedDate);
-      const hasWorkoutEntry = entriesForDate.some(d => d.type !== 'Recovery');
+      const hasWorkoutEntry = entriesForDate.some(d => {
+        if (d.ex === 'Imported Steps') return false;
+        return d.type === 'Push' || d.type === 'Pull' || d.type === 'Legs' || d.type === 'Upper Hypertrophy' || d.type === 'Circuit' || d.type === 'Cardio';
+      });
       
       const typeElVal = document.getElementById('type')?.value;
-      const hasWorkout = hasWorkoutEntry || (typeElVal && typeElVal !== 'Recovery');
+      const hasWorkout = hasWorkoutEntry || (typeElVal && ['Push', 'Pull', 'Legs', 'Upper Hypertrophy', 'Circuit', 'Cardio'].includes(typeElVal));
       const shiftType = document.getElementById('day')?.value || 'Off Day';
 
-      const targets = calculateDailyTargets(hasWorkout, shiftType);
+      const targets = calculateDailyTargets(hasWorkout, shiftType, typeElVal);
       
       const metaProteinEl = document.getElementById('metaProtein');
       const metaCarbsEl = document.getElementById('metaCarbs');
@@ -824,75 +960,71 @@
     }
 
     const exerciseMap = {
-      Push: ['Bench Press', 'Overhead Press', 'Incline DB Press', 'Lateral Raises', 'Triceps Pushdown'],
-      Pull: ['Deadlift', 'Assisted Pull-Ups', 'Barbell Rows', 'Face Pulls', 'Barbell Curls'],
-      Legs: ['Squat', 'Romanian Deadlift', 'Hip Thrust', 'Walking Lunges', 'Leg Curl', 'Leg Extension', 'Standing Calf Raises', 'Weighted Decline Sit-Ups'],
+      Push: ['Bench Press', 'Incline DB Press', 'Overhead Press', 'Lateral Raises', 'Triceps Pushdown'],
+      Pull: ['Assisted Pull-Ups', 'Barbell Rows', 'Single Arm DB Row', 'Face Pulls', 'Barbell Curls'],
+      Legs: ['Squat', 'Romanian Deadlift', 'Walking Lunges', 'Leg Extension', 'Leg Curl', 'Standing Calf Raises'],
       'Upper Hypertrophy': ['Incline DB Press', 'Machine Chest Press', 'DB Shoulder Press', 'Lateral Raises', 'Lat Pulldown', 'Seated Cable Row', 'EZ Bar Curl', 'Triceps Pushdown'],
-      Hypertrophy: ['Incline DB Press', 'Chest Fly', 'DB Shoulder Press', 'Lateral Raises', 'Skull Crushers', 'Triceps Pushdown', 'Incline DB Curls', 'Hammer Curls'],
       Circuit: ['Kettlebell Swings', 'Sled Push', 'Battle Ropes', 'Farmer Carry', 'Sandbag Carry', 'Loaded Step-Up', 'Box Jumps'],
-      Cardio: ['Stationary Bike', 'Zone 2 Bike', 'Walk'],
-      Recovery: ['Walk', 'Mobility'],
-      Custom: ['Bench Press', 'Deadlift', 'Squat', 'Incline DB Press', 'Hip Thrust', 'Stationary Bike', 'Skull Crushers', 'Incline DB Curls']
+      Cardio: ['Zone 2 Bike', 'Stationary Bike', 'Walk'],
+      Recovery: ['Walk', 'Recovery Walk', 'Mobility'],
+      Custom: ['Bench Press', 'Assisted Pull-Ups', 'Squat', 'Incline DB Press', 'Zone 2 Bike', 'Walk']
     };
 
     const workoutTemplates = {
       Push: [
-        '1. Bench Press — 4 × 4-6',
-        '2. Overhead Press — 3 × 6-8',
-        '3. Incline DB Press — 3-4 × 8-12',
+        '1. Bench Press — 4-5 × 3-5',
+        '2. Incline DB Press — 3 × 6-8',
+        '3. Overhead Press — 3 × 5-8',
         '4. Lateral Raises — 3 × 12-15',
-        '5. Triceps Pushdown — 3 × 10-12'
+        '5. Triceps — 2-3 sets',
+        '6. Note — Stop 1-2 reps before failure'
       ],
       Pull: [
-        '1. Deadlift — 4 × 3-5',
-        '2. Assisted Pull-Ups — 3 × 6-8',
-        '3. Barbell Rows — 3 × 8-10',
-        '4. Face Pulls — 3 × 15',
-        '5. Barbell Curls — 3 × 10-12'
+        '1. Assisted Pull-Ups — 4 sets',
+        '2. Barbell Rows — 4 × 5-8',
+        '3. Single Arm DB Row — 3 × 8-10',
+        '4. Face Pulls — 3 × 12-15',
+        '5. Curls — 2-3 sets',
+        '6. Note — Focus on strong form and skill work'
       ],
       Legs: [
-        '1. Squat — 4 × 4-6',
-        '2. Romanian Deadlift — 3 × 8-10',
-        '3. Hip Thrust — 3 × 8-12',
-        '4. Walking Lunges — 3 × 10-12',
-        '5. Leg Curl — 3 × 10-12 optional if hamstrings are not smoked',
-        '6. Leg Extension — 2 × 12-15 finisher',
-        '7. Standing Calf Raises — 5 × 10-20',
-        '8. Weighted Decline Sit-Ups — 4-5 × 8-12'
+        '1. Squat — 4 × 3-6',
+        '2. Romanian Deadlift — 3 × 6-8',
+        '3. Walking Lunges — 2 controlled sets',
+        '4. Leg Extension — 3 × 10-15',
+        '5. Leg Curl — 2-3 sets',
+        '6. Standing Calf Raises — 4-5 × 10-20',
+        '7. Note — Control volume, no annihilation sets'
       ],
       'Upper Hypertrophy': [
         '1. Incline DB Press — 3 × 8-12',
-        '2. Machine Chest Press — 2 × 10-12',
+        '2. Machine Chest Press — 2-3 × 10-12',
         '3. DB Shoulder Press — 3 × 8-12',
-        '4. Lateral Raises — 3 × 12-15',
+        '4. Lateral Raises — 4 × 12-15',
         '5. Lat Pulldown — 3 × 8-12',
-        '6. Seated Cable Row — 2 × 10-12',
-        '7. EZ Bar Curl — 2 × 10-12',
-        '8. Triceps Pushdown — 2 × 10-12'
-      ],
-      Hypertrophy: [
-        '1. Incline DB Press — 4 × 8-12',
-        '2. Chest Fly — 3 × 10-12',
-        '3. DB Shoulder Press — 3 × 8-10',
-        '4. Lateral Raises — 3 × 15',
-        '5. Skull Crushers or Triceps Pushdown — 3 × 10-12',
-        '6. Incline DB Curls — 3 × 10-12',
-        '7. Hammer Curls — 3 × 10-12'
+        '6. Seated Cable Row — 2-3 × 10-12',
+        '7. EZ Bar Curl — 2-3 × 10-12',
+        '8. Triceps Pushdown — 2-3 × 10-12',
+        '9. Note — Pump day, not to failure'
       ],
       Circuit: [
         '1. Kettlebell Swings — 30-45 sec',
         '2. Sled Push — 30-45 sec',
         '3. Battle Ropes — 30-45 sec',
         '4. Farmer Carry or Sandbag Carry — 2-3 rounds',
-        '5. Loaded Step-Up or Box Jumps — 3 × 8-10'
+        '5. Loaded Step-Up or Box Jumps — 3 × 8-10',
+        '6. Note — Optional conditioning only'
       ],
       Cardio: [
-        '1. Stationary Bike or Zone 2 Bike — 20-30 min',
-        '2. Walk — optional cooldown'
+        '1. Zone 2 Bike or Walk — 20-45 min',
+        '2. Easy pace, nasal-breathing effort',
+        '3. Note — Recover while building conditioning'
       ],
       Recovery: [
-        '1. Walk — easy effort',
-        '2. Mobility — 10-15 min'
+        '1. Walk — 20-45 min easy effort',
+        '2. Mobility — 10-15 min',
+        '3. Optional light pump work — 1-2 easy sets',
+        '4. Note — Restore, do not push'
       ],
       Custom: [
         'Pick the exercises you need today.',
@@ -945,6 +1077,12 @@
     const waistEl = { value: '' };
     const glucosePreEl = document.getElementById('glucosePre');
     const glucosePostEl = document.getElementById('glucosePost');
+    const cycleCurrentEl = document.getElementById('cycleCurrent');
+    const cycleNextEl = document.getElementById('cycleNext');
+    const cycleGridEl = document.getElementById('cycleGrid');
+    const cycleApplyTodayEl = document.getElementById('cycleApplyToday');
+    const cycleAdvanceEl = document.getElementById('cycleAdvance');
+    const cycleResetEl = document.getElementById('cycleReset');
     const set1WeightEl = document.getElementById('set1Weight');
     const set1RepsEl = document.getElementById('set1Reps');
     const set1HistoryEl = document.getElementById('set1History');
@@ -993,31 +1131,33 @@
     const chipsEl = document.getElementById('exerciseChips');
     const workoutPreviewListEl = document.getElementById('workoutPreviewList');
     const importStepsCsvBtn = document.getElementById('importStepsCsv');
+    const fatigueChipsEl = document.getElementById('fatigueChips');
     const stepsCsvFileEl = document.getElementById('stepsCsvFile');
     function getExerciseRecommendations() {
       return {
-        'Bench Press': { sets: 4, reps: '4-6' },
-        'Overhead Press': { sets: 3, reps: '6-8' },
-        'Incline DB Press': { sets: 4, reps: '8-12' },
-        'Machine Chest Press': { sets: 2, reps: '10-12' },
+        'Bench Press': { sets: 5, reps: '3-5' },
+        'Overhead Press': { sets: 3, reps: '5-8' },
+        'Incline DB Press': { sets: 3, reps: '8-12' },
+        'Machine Chest Press': { sets: 3, reps: '10-12' },
         'Cable Chest Press': { sets: 3, reps: '10-15' },
         'Deadlift': { sets: 4, reps: '3-5' },
         'Weighted Pull-Ups': { sets: 3, reps: '4-6' },
+        'Assisted Pull-Ups': { sets: 4, reps: '6-8' },
         'Lat Pulldown': { sets: 3, reps: '8-12' },
-        'Assisted Pull-Ups': { sets: 3, reps: '6-8' },
-        'Barbell Rows': { sets: 3, reps: '8-10' },
-        'Seated Cable Row': { sets: 2, reps: '10-12' },
+        'Barbell Rows': { sets: 4, reps: '5-8' },
+        'Single Arm DB Row': { sets: 3, reps: '8-10' },
+        'Seated Cable Row': { sets: 3, reps: '10-12' },
         'Face Pulls': { sets: 3, reps: '12-15' },
-        'Squat': { sets: 4, reps: '4-6' },
-        'Romanian Deadlift': { sets: 3, reps: '8-10' },
+        'Squat': { sets: 4, reps: '3-6' },
+        'Romanian Deadlift': { sets: 3, reps: '6-8' },
         'Hip Thrust': { sets: 3, reps: '8-12' },
-        'Walking Lunges': { sets: 3, reps: '10-12' },
+        'Walking Lunges': { sets: 2, reps: '10-12' },
         'Leg Curl': { sets: 3, reps: '10-12' },
-        'Leg Extension': { sets: 2, reps: '12-15' },
+        'Leg Extension': { sets: 3, reps: '10-15' },
         'Standing Calf Raises': { sets: 5, reps: '10-20' },
-        'Weighted Decline Sit-Ups': { sets: 5, reps: '8-12' },
+        'Weighted Decline Sit-Ups': { sets: 4, reps: '8-12' },
         'DB Shoulder Press': { sets: 3, reps: '8-12' },
-        'Lateral Raises': { sets: 3, reps: '12-15' },
+        'Lateral Raises': { sets: 4, reps: '12-15' },
         'Chest Fly': { sets: 3, reps: '10-12' },
         'Rear Delt Fly': { sets: 3, reps: '12-20' },
         'Kettlebell Swings': { sets: 3, reps: '15' },
@@ -1025,18 +1165,22 @@
         'Battle Ropes': { sets: 4, reps: '30 sec' },
         'Farmer Carry': { sets: 3, reps: '40 yd' },
         'Sandbag Carry': { sets: 3, reps: '40 yd' },
-        'Jump Box': { sets: 3, reps: '10' },
         'Loaded Step-Up': { sets: 3, reps: '8-10' },
         'Box Jumps': { sets: 3, reps: '8-10' },
         'Skull Crushers': { sets: 3, reps: '10-12' },
-        'Triceps Pushdown': { sets: 2, reps: '10-12' },
+        'Triceps Pushdown': { sets: 3, reps: '10-12' },
         'Overhead Triceps Extension': { sets: 3, reps: '10-12' },
         'Incline DB Curls': { sets: 3, reps: '10-12' },
         'Hammer Curls': { sets: 3, reps: '10-12' },
-        'EZ Bar Curl': { sets: 2, reps: '10-12' },
+        'EZ Bar Curl': { sets: 3, reps: '10-12' },
         'Cable Crunch': { sets: 3, reps: '12-15' },
         'Hanging Knee Raise': { sets: 3, reps: '10-15' },
-        "Captain's Chair": { sets: 3, reps: '10-15' }
+        "Captain's Chair": { sets: 3, reps: '10-15' },
+        'Walk': { sets: 1, reps: '20-45 min' },
+        'Recovery Walk': { sets: 1, reps: '20-45 min' },
+        'Zone 2 Bike': { sets: 1, reps: '20-45 min' },
+        'Stationary Bike': { sets: 1, reps: '20-30 min' },
+        'Mobility': { sets: 1, reps: '10-15 min' }
       };
     }
 
@@ -1057,17 +1201,28 @@
         return;
       }
 
-      const last = [...load()].reverse().find(d => d.ex === name && d.w !== '');
+      const last = [...load()].reverse().find(d => d.ex === name && (
+        d.s1w || d.s1r || d.s2w || d.s2r || d.s3w || d.s3r || d.s4w || d.s4r || d.du || d.di
+      ));
       if (!last) {
         exerciseHistoryEl.textContent = '';
         return;
       }
 
-      const lastWeight = parseFloat(last.w);
-      const suggested = Number.isFinite(lastWeight) ? lastWeight + 5 : null;
-      exerciseHistoryEl.textContent = suggested
-        ? `Last: ${last.w} lb on ${last.date}. Suggested next: ${suggested} lb.`
-        : `Last logged on ${last.date}.`;
+      if (last.s1w || last.s1r) {
+        const suggested = last.s1w ? Number(last.s1w) + 5 : null;
+        exerciseHistoryEl.textContent = suggested
+          ? `Last top set: ${last.s1w} lb × ${last.s1r || '—'} on ${last.date}. Suggested next: ${suggested} lb.`
+          : `Last logged on ${last.date}.`;
+        return;
+      }
+
+      if (last.du || last.di) {
+        exerciseHistoryEl.textContent = `Last logged on ${last.date}: ${last.du || '—'} min${last.di ? `, ${last.di}` : ''}.`;
+        return;
+      }
+
+      exerciseHistoryEl.textContent = `Last logged on ${last.date}.`;
     }
 
 
@@ -1105,6 +1260,81 @@
       localStorage.removeItem(DRAFT_KEY);
     }
 
+    function loadCycleState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(CYCLE_KEY) || 'null');
+        const index = Number.isInteger(saved?.index) ? saved.index : 0;
+        return { index: Math.min(Math.max(index, 0), EIGHT_DAY_CYCLE.length - 1) };
+      } catch {
+        return { index: 0 };
+      }
+    }
+
+    function saveCycleState(state) {
+      const index = Number.isInteger(state?.index) ? state.index : 0;
+      localStorage.setItem(CYCLE_KEY, JSON.stringify({
+        index: Math.min(Math.max(index, 0), EIGHT_DAY_CYCLE.length - 1)
+      }));
+    }
+
+    function getCycleDay(offset = 0) {
+      const { index } = loadCycleState();
+      const normalizedIndex = (index + offset + EIGHT_DAY_CYCLE.length) % EIGHT_DAY_CYCLE.length;
+      return {
+        ...EIGHT_DAY_CYCLE[normalizedIndex],
+        index: normalizedIndex
+      };
+    }
+
+    function setCycleDay(index) {
+      saveCycleState({ index });
+      renderCyclePlanner();
+      applyCycleDayToForm();
+    }
+
+    function renderCyclePlanner() {
+      const current = getCycleDay();
+      const next = getCycleDay(1);
+
+      if (cycleCurrentEl) {
+        cycleCurrentEl.textContent = `${current.label} · ${current.type}${current.exercise ? ` (${current.exercise})` : ''}`;
+      }
+      if (cycleNextEl) {
+        cycleNextEl.textContent = `${next.label} · ${next.type}${next.exercise ? ` (${next.exercise})` : ''}`;
+      }
+      if (cycleGridEl) {
+        cycleGridEl.innerHTML = EIGHT_DAY_CYCLE.map((day, index) => `
+          <div class="cycle-day${index === current.index ? ' active' : ''}" onclick="setCycleDay(${index}); return false;">
+            <div class="cycle-day-label">${day.label}</div>
+            <div class="cycle-day-value">${escapeHtml(day.type)}${day.exercise ? `<br>${escapeHtml(day.exercise)}` : ''}</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function applyCycleDayToForm() {
+      const current = getCycleDay();
+      presetWorkout(current.type, current.exercise, null);
+      saveDraft(getDraftFromForm());
+    }
+
+    function advanceCycleDay() {
+      const { index } = loadCycleState();
+      saveCycleState({ index: (index + 1) % EIGHT_DAY_CYCLE.length });
+      renderCyclePlanner();
+      saveDraft(getDraftFromForm());
+    }
+
+    function resetCycleDay() {
+      saveCycleState({ index: 0 });
+      renderCyclePlanner();
+      saveDraft(getDraftFromForm());
+    }
+
+    function shouldAdvanceCycleForType(type) {
+      return ['Push', 'Pull', 'Legs', 'Upper Hypertrophy', 'Cardio', 'Recovery', 'Circuit', 'Custom'].includes(type);
+    }
+
     function getDraftFromForm() {
       return {
         date: dateEl.value,
@@ -1128,6 +1358,7 @@
         s3r: set3RepsEl.value,
         s4w: set4WeightEl.value,
         s4r: set4RepsEl.value,
+        fatigue: document.querySelector('#fatigueChips .chip.active')?.dataset.fatigue || 'Normal',
         n: notesEl.value
       };
     }
@@ -1157,6 +1388,10 @@
       set3RepsEl.value = draft.s3r || '';
       set4WeightEl.value = draft.s4w || '';
       set4RepsEl.value = draft.s4r || '';
+      const savedFatigue = draft.fatigue || 'Normal';
+      document.querySelectorAll('#fatigueChips .chip').forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.fatigue === savedFatigue);
+      });
       notesEl.value = draft.n || '';
       updateExerciseChips();
       updateWorkoutPreview(typeEl.value);
@@ -1235,6 +1470,7 @@
 
     function setDayOnly(day, btn) {
       dayEl.value = day;
+      saveDraft(getDraftFromForm());
       clearActive('dayButtons');
       if (btn) btn.classList.add('active');
       if (typeof refreshMetabolicDashboard === 'function') refreshMetabolicDashboard();
@@ -1257,16 +1493,30 @@
       updateExerciseHistory(exercise);
       updateSetHistory(exercise);
 
-      if (type === 'Upper Hypertrophy') {
-        notesEl.value = 'Recovery-friendly upper pump day after legs. Keep effort around RPE 7-8, rest 60-90 sec, and avoid maxing out.';
-      }
+      const fatigueDefault = type === 'Recovery' ? 'Beat Up' : 'Normal';
+      document.querySelectorAll('#fatigueChips .chip').forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.fatigue === fatigueDefault);
+      });
 
-      if (type === 'Hypertrophy') {
-        notesEl.value = 'Template: Incline DB Press, Chest Fly, DB Shoulder Press, Lateral Raises, Skull Crushers or Triceps Pushdown, Incline DB Curls, Hammer Curls';
+      if (type === 'Push') {
+        notesEl.value = 'Strength day. Stop 1-2 reps before failure.';
+      } else if (type === 'Pull') {
+        notesEl.value = 'Strength + skill day. Focus on clean pull-up work and stop short of failure.';
+      } else if (type === 'Legs') {
+        notesEl.value = 'Controlled lower day. Keep volume in check and avoid annihilation sets.';
+      } else if (type === 'Upper Hypertrophy') {
+        notesEl.value = 'Pump day. Shorter rest, good contractions, not to failure.';
+      } else if (type === 'Cardio') {
+        notesEl.value = 'Zone 2 cardio session. Easy sustainable pace for conditioning.';
+      } else if (type === 'Recovery') {
+        notesEl.value = 'Recovery day. Zone 2 walk and mobility only.';
+      } else if (type === 'Circuit') {
+        notesEl.value = 'Optional conditioning. Use only if recovery is good.';
       }
 
       clearActive('workoutButtons');
       if (btn) btn.classList.add('active');
+      if (typeof refreshMetabolicDashboard === 'function') refreshMetabolicDashboard();
     }
 
     function resetForm() {
@@ -1293,6 +1543,9 @@
       set3RepsEl.value = '';
       set4WeightEl.value = '';
       set4RepsEl.value = '';
+      document.querySelectorAll('#fatigueChips .chip').forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.fatigue === 'Normal');
+      });
       notesEl.value = '';
       exerciseRecommendationEl.textContent = '';
       exerciseHistoryEl.textContent = '';
@@ -1374,14 +1627,14 @@
         const stepsValue = String(rawSteps).replace(/[^0-9]/g, '');
         if (!stepsValue) continue;
 
-        const duplicate = existing.some(entry => entry.date === date && entry.type === 'Cardio' && entry.ex === 'Imported Steps');
+        const duplicate = existing.some(entry => entry.date === date && entry.type === 'Recovery' && entry.ex === 'Imported Steps');
         if (duplicate) continue;
 
         existing.push({
           id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random() + i),
           date,
           day: 'Off Day',
-          type: 'Cardio',
+          type: 'Recovery',
           ex: 'Imported Steps',
           w: '',
           sets: '',
@@ -1400,6 +1653,7 @@
           s3r: '',
           s4w: '',
           s4r: '',
+          fatigue: '',
           n: `Imported steps: ${stepsValue}`,
           steps: stepsValue
         });
@@ -1421,7 +1675,7 @@
       const filterType = document.getElementById('filterType').value;
 
       const filtered = [...data].reverse().filter(d => {
-        const haystack = [d.ex, d.n, d.type, d.day, d.steps].join(' ').toLowerCase();
+        const haystack = [d.ex, d.n, d.type, d.day, d.steps, d.fatigue].join(' ').toLowerCase();
         const matchSearch = !search || haystack.includes(search);
         const matchDay = !filterDay || d.day === filterDay;
         const matchType = !filterType || d.type === filterType;
@@ -1452,6 +1706,7 @@
         if (d.gpre) metricBoxes.push(buildMetaBox('Pre Glucose', d.gpre));
         if (d.gpost) metricBoxes.push(buildMetaBox('Post Glucose', d.gpost));
         if (d.steps) metricBoxes.push(buildMetaBox('Steps', d.steps));
+        if (d.fatigue) metricBoxes.push(buildMetaBox('Fatigue', d.fatigue));
 
         const allBoxes = [...setBoxes, ...metricBoxes];
         const notesHtml = d.n
@@ -1503,11 +1758,12 @@
       }
 
       const data = load();
+      const savedType = typeEl.value;
       data.push({
         id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
         date: dateEl.value,
         day: dayEl.value,
-        type: typeEl.value,
+        type: savedType,
         ex: exerciseEl.value,
         w: hasLegacyInputs ? weightEl.value : '',
         sets: hasLegacyInputs ? setsEl.value : '',
@@ -1526,10 +1782,14 @@
         s3r: set3RepsEl.value,
         s4w: set4WeightEl.value,
         s4r: set4RepsEl.value,
+        fatigue: document.querySelector('#fatigueChips .chip.active')?.dataset.fatigue || 'Normal',
         n: notesEl.value,
         steps: ''
       });
       saveEntries(data);
+      if (shouldAdvanceCycleForType(savedType)) {
+        advanceCycleDay();
+      }
       exerciseEl.value = '';
       if (hasLegacyInputs) {
         weightEl.value = '';
@@ -1549,13 +1809,20 @@
       set3RepsEl.value = '';
       set4WeightEl.value = '';
       set4RepsEl.value = '';
+      document.querySelectorAll('#fatigueChips .chip').forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.fatigue === 'Normal');
+      });
       clearDraft();
       render();
     });
 
     document.getElementById('clearForm').addEventListener('click', resetForm);
     document.getElementById('stickyClear').addEventListener('click', resetForm);
-    document.getElementById('useToday').addEventListener('click', () => { dateEl.value = todayString(); });
+    document.getElementById('useToday').addEventListener('click', () => {
+      dateEl.value = todayString();
+      refreshMetabolicDashboard();
+    });
+
 
 
     importStepsCsvBtn.addEventListener('click', () => {
@@ -1570,12 +1837,15 @@
       stepsCsvFileEl.value = '';
     });
 
+
     document.getElementById('clearBlank').addEventListener('click', () => {
       if (!window.confirm('Delete all blank or no-exercise entries?')) return;
 
       const data = load().filter(entry => {
         const hasExercise = String(entry.ex || '').trim() !== '';
         const hasOtherData = [
+          entry.fatigue,
+          entry.n,
           entry.du,
           entry.di,
           entry.bw,
@@ -1590,7 +1860,6 @@
           entry.s3r,
           entry.s4w,
           entry.s4r,
-          entry.n,
           entry.steps
         ].some(value => String(value || '').trim() !== '');
 
@@ -1644,7 +1913,8 @@
         'Waist (in)',
         'Pre Glucose',
         'Post Glucose',
-        'Steps'
+        'Steps',
+        'Fatigue'
       ];
 
       const workoutRows = data
@@ -1673,6 +1943,7 @@
             '',
             '',
             '',
+            '',
             ''
           ];
         });
@@ -1691,6 +1962,7 @@
             gpre: '',
             gpost: '',
             steps: '',
+            fatigue: '',
             notes: ''
           });
         }
@@ -1703,11 +1975,12 @@
         if (d.gpre) current.gpre = d.gpre;
         if (d.gpost) current.gpost = d.gpost;
         if (d.steps) current.steps = d.steps;
+        if (d.fatigue) current.fatigue = d.fatigue;
         if (d.n) current.notes = d.n;
       });
 
       const metricRows = [...metricsByDate.values()]
-        .filter(d => d.bw || d.wa || d.gpre || d.gpost || d.steps)
+        .filter(d => d.bw || d.wa || d.gpre || d.gpost || d.steps || d.fatigue)
         .sort((a, b) => String(a.date).localeCompare(String(b.date)))
         .map(d => [
           'Daily Metrics',
@@ -1731,7 +2004,8 @@
           d.wa,
           d.gpre,
           d.gpost,
-          d.steps
+          d.steps,
+          d.fatigue
         ]);
 
       const csv = [headers, ...workoutRows, ...metricRows]
@@ -1779,6 +2053,13 @@ chipsEl.addEventListener('click', (e) => {
   chip.classList.add('active');
 });
 
+    fatigueChipsEl.addEventListener('click', (e) => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      fatigueChipsEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+
     exerciseEl.addEventListener('input', () => {
       updateExerciseRecommendation(exerciseEl.value);
       updateExerciseHistory(exerciseEl.value);
@@ -1791,6 +2072,9 @@ chipsEl.addEventListener('click', (e) => {
       updateExerciseChips();
       updateWorkoutPreview(typeEl.value);
       updateConditionalFields(typeEl.value);
+      updateExerciseRecommendation(exerciseEl.value);
+      updateExerciseHistory(exerciseEl.value);
+      updateSetHistory(exerciseEl.value);
       refreshMetabolicDashboard();
     });
     document.getElementById('search').addEventListener('input', render);
@@ -1802,6 +2086,11 @@ chipsEl.addEventListener('click', (e) => {
       saveEntries(data);
       render();
     };
+    window.applyCycleDayToForm = applyCycleDayToForm;
+    window.advanceCycleDay = advanceCycleDay;
+    window.resetCycleDay = resetCycleDay;
+    window.setCycleDay = setCycleDay;
+    console.log('8-day cycle functions ready');
 
     dateEl.value = todayString();
     dayEl.value = 'Off Day';
@@ -1810,9 +2099,11 @@ chipsEl.addEventListener('click', (e) => {
     updateWorkoutPreview('Custom');
     updateConditionalFields('Custom');
     presetWorkout('Custom', '', document.querySelector('#workoutButtons .preset-btn.active'));
+    document.querySelectorAll('#fatigueChips .chip').forEach(chip => chip.classList.toggle('active', chip.dataset.fatigue === 'Normal'));
     updateSetHistory('');
     applyDraft(loadDraft());
     setupDraftAutosave();
+    if (document.getElementById('cycleGrid')) renderCyclePlanner();
     render();
   </script>
 </body>
