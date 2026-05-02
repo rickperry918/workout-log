@@ -1875,15 +1875,16 @@
       }
 
       try {
-        const response = await fetch(url, {
+        const body = new URLSearchParams();
+        body.append('payload', JSON.stringify({ rows }));
+
+        await fetch(url, {
           method: 'POST',
           mode: 'no-cors',
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-          },
-          body: JSON.stringify({ rows })
+          body
         });
-        alert('Sync sent to Google Sheets. Open your sheet to confirm rows updated.');
+
+        alert(`Sync sent to Google Sheets (${rows.length - 1} data rows). Open your sheet to confirm rows updated.`);
       } catch (error) {
         console.error(error);
         alert('Sync failed. Check your Web App URL and deployment permissions.');
