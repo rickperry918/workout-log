@@ -1,36 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Workout Tracker</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header>
-    <h1>Workout Tracker</h1>
-  </header>
-  <main>
-    <button id="toggleWorkout" onclick="toggleWorkoutTypes()">
-      Toggle Workout Types <span id="workoutToggleIcon">▼</span>
-    </button>
-    <div id="workoutButtons" class="hidden">
-      <!-- Workout type buttons here -->
-    </div>
-  </main>
-  <footer>
-    <p>&copy; 2024 Workout Tracker</p>
-  </footer>
-  <script>
-    function toggleWorkoutTypes() {
-      const el = document.getElementById('workoutButtons');
-      const icon = document.getElementById('workoutToggleIcon');
-      if (!el || !icon) return;
-      const isHidden = el.classList.contains('hidden');
-      el.classList.toggle('hidden');
-      icon.textContent = isHidden ? '▲' : '▼';
+{
+  "name": "Workout Tracker",
+  "short_name": "Workouts",
+  "description": "Flexible workout logging for your shift schedule.",
+  "start_url": "/workout-log/index.html",
+  "scope": "/workout-log/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#22c55e",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
-    // other scripts...
-  </script>
-</body>
-</html>
+  ]
+}
