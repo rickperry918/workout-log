@@ -241,6 +241,9 @@
       border-radius: 14px;
       padding: 12px 13px;
       outline: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.95rem;
     }
 
     textarea {
@@ -610,15 +613,8 @@
             <div class="form-grid">
               <div>
                 <label for="date">Date</label>
-                <input type="date" id="date" required />
-              </div>
-              <div>
-                <label for="day">Day</label>
-                <select id="day">
-                  <option>AM Shift</option>
-                  <option>PM Shift</option>
-                  <option>Off Day</option>
-                </select>
+                <div style="font-size: 0.85rem; color: var(--muted); margin-bottom: 4px;">Tap to change</div>
+                <input type="date" id="date" required style="font-size: 0.95rem; padding: 10px;" />
               </div>
 
               <div>
@@ -1024,7 +1020,7 @@
     };
 
     const dateEl = document.getElementById('date');
-    const dayEl = document.getElementById('day');
+    const dayEl = document.getElementById('day') || { value: 'Off Day', addEventListener: () => {} };
     const typeEl = document.getElementById('type');
     const exerciseEl = document.getElementById('exercise');
     const exerciseRecommendationEl = document.getElementById('exerciseRecommendation');
@@ -1115,6 +1111,26 @@
         targets[index].textContent = (weight || reps)
           ? `Last: ${weight || '—'}${weight ? ' lb' : ''} × ${reps || '—'}`
           : 'Last: — lb × —';
+      });
+    }
+
+    function autofillLastSetWeights(exercise) {
+      const name = (exercise || '').trim();
+      if (!name) return;
+
+      const last = [...load()].reverse().find(d => d.ex === name && (
+        d.s1w || d.s2w || d.s3w || d.s4w
+      ));
+
+      if (!last) return;
+
+      const weightFields = [set1WeightEl, set2WeightEl, set3WeightEl, set4WeightEl];
+      const lastWeights = [last.s1w, last.s2w, last.s3w, last.s4w];
+
+      weightFields.forEach((field, index) => {
+        if (field && !field.value && lastWeights[index]) {
+          field.value = lastWeights[index];
+        }
       });
     }
     const notesEl = document.getElementById('notes');
@@ -1567,10 +1583,12 @@
     }
 
     function setDayOnly(day, btn) {
-      dayEl.value = day;
+      dayEl.value = day || 'Off Day';
       saveDraft(getDraftFromForm());
-      clearActive('dayButtons');
-      if (btn) btn.classList.add('active');
+      if (document.getElementById('dayButtons')) {
+        clearActive('dayButtons');
+        if (btn) btn.classList.add('active');
+      }
       if (typeof refreshMetabolicDashboard === 'function') refreshMetabolicDashboard();
     }
 
@@ -1590,6 +1608,7 @@
       updateExerciseRecommendation(exercise);
       updateExerciseHistory(exercise);
       updateSetHistory(exercise);
+      autofillLastSetWeights(exercise);
 
       const fatigueDefault = type === 'Recovery' || type === 'Light / Off' ? 'Beat Up' : 'Normal';
       document.querySelectorAll('#fatigueChips .chip').forEach(chip => {
@@ -1656,10 +1675,14 @@
       updateExerciseChips();
       updateWorkoutPreview('Custom');
       updateConditionalFields('Custom');
-      clearActive('dayButtons');
-      document.querySelector('#dayButtons .preset-btn:last-child')?.classList.add('active');
-      clearActive('workoutButtons');
-      document.querySelector('#workoutButtons .preset-btn:last-child')?.classList.add('active');
+      if (document.getElementById('dayButtons')) {
+        clearActive('dayButtons');
+        document.querySelector('#dayButtons .preset-btn:last-child')?.classList.add('active');
+      }
+      if (document.getElementById('workoutButtons')) {
+        clearActive('workoutButtons');
+        document.querySelector('#workoutButtons .preset-btn:last-child')?.classList.add('active');
+      }
     }
 
     function parseCsvLine(line) {
@@ -2147,6 +2170,7 @@ chipsEl.addEventListener('click', (e) => {
   updateExerciseRecommendation(exercise);
   updateExerciseHistory(exercise);
   updateSetHistory(exercise);
+  autofillLastSetWeights(exercise);
   updateConditionalFields(typeEl.value);
 
   chipsEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
@@ -2164,10 +2188,11 @@ chipsEl.addEventListener('click', (e) => {
       updateExerciseRecommendation(exerciseEl.value);
       updateExerciseHistory(exerciseEl.value);
       updateSetHistory(exerciseEl.value);
+      autofillLastSetWeights(exerciseEl.value);
       updateConditionalFields(typeEl.value);
     });
     dateEl.addEventListener('change', refreshMetabolicDashboard);
-    dayEl.addEventListener('change', refreshMetabolicDashboard);
+    dayEl.addEventListener?.('change', refreshMetabolicDashboard);
     typeEl.addEventListener('change', () => {
       updateExerciseChips();
       updateWorkoutPreview(typeEl.value);
@@ -2193,7 +2218,7 @@ chipsEl.addEventListener('click', (e) => {
     console.log('8-day cycle functions ready');
 
     dateEl.value = todayString();
-    dayEl.value = 'Off Day';
+    dayEl.value = dayEl.value || 'Off Day';
     typeEl.value = 'Custom';
     updateExerciseChips();
     updateWorkoutPreview('Custom');
