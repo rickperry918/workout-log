@@ -645,8 +645,11 @@
             </div>
           </div>
 
-          <h3 style="margin-top:14px;">Workout Type</h3>
-          <div class="button-grid-3" id="workoutButtons">
+          <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleWorkoutTypes()">
+            <h3 style="margin:0;">Workout Type (Manual Override)</h3>
+            <span id="workoutToggleIcon" style="color:var(--muted);">▼</span>
+          </div>
+          <div class="button-grid-3 hidden" id="workoutButtons">
             <button class="preset-btn" type="button" onclick="presetWorkout('Performance','Leg Extension', this);">Performance<small>Hard, repeatable work</small></button>
             <button class="preset-btn" type="button" onclick="presetWorkout('Push','Bench Press', this);">Push<small>Press strength</small></button>
             <button class="preset-btn" type="button" onclick="presetWorkout('Movement / Engine','Loaded Step-Up', this);">Movement / Engine<small>Step-ups / bike / carry</small></button>
@@ -2271,3 +2274,11 @@ chipsEl.addEventListener('click', (e) => {
   </script>
 </body>
 </html>
+
+    function toggleWorkoutTypes() {
+      const el = document.getElementById('workoutButtons');
+      const icon = document.getElementById('workoutToggleIcon');
+      const isHidden = el.classList.contains('hidden');
+      el.classList.toggle('hidden');
+      icon.textContent = isHidden ? '▲' : '▼';
+    }
