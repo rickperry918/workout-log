@@ -1,50 +1,36 @@
-{
-  "name": "Workout Tracker",
-  "short_name": "Workouts",
-  "description": "Flexible workout logging for your shift schedule. Track strength, cardio, recovery, and more.",
-  "start_url": "/workout-log/index.html",
-  "scope": "/workout-log/",
-  "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#0f172a",
-  "theme_color": "#22c55e",
-  "icons": [
-    {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230f172a' width='192' height='192'/><circle cx='96' cy='96' r='70' fill='%2322c55e'/><text x='96' y='110' font-size='60' font-weight='bold' text-anchor='middle' fill='%23052e16'>W</text></svg>",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%230f172a' width='512' height='512'/><circle cx='256' cy='256' r='190' fill='%2322c55e'/><text x='256' y='290' font-size='180' font-weight='bold' text-anchor='middle' fill='%23052e16'>W</text></svg>",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Workout Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Workout Tracker</h1>
+  </header>
+  <main>
+    <button id="toggleWorkout" onclick="toggleWorkoutTypes()">
+      Toggle Workout Types <span id="workoutToggleIcon">▼</span>
+    </button>
+    <div id="workoutButtons" class="hidden">
+      <!-- Workout type buttons here -->
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2024 Workout Tracker</p>
+  </footer>
+  <script>
+    function toggleWorkoutTypes() {
+      const el = document.getElementById('workoutButtons');
+      const icon = document.getElementById('workoutToggleIcon');
+      if (!el || !icon) return;
+      const isHidden = el.classList.contains('hidden');
+      el.classList.toggle('hidden');
+      icon.textContent = isHidden ? '▲' : '▼';
     }
-  ],
-  "screenshots": [
-    {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%230f172a' width='540' height='720'/><rect fill='%23111827' y='0' width='540' height='100'/><text x='30' y='50' font-size='24' fill='%23e5e7eb' font-weight='bold'>Workout Tracker</text><rect fill='%2316a34a' x='30' y='150' width='480' height='60' rx='10'/><text x='270' y='190' font-size='16' fill='white' text-anchor='middle' font-weight='bold'>Log Your Workout</text></svg>",
-      "sizes": "540x720",
-      "type": "image/svg+xml",
-      "form_factor": "narrow"
-    }
-  ],
-  "categories": ["fitness", "health"],
-  "shortcuts": [
-    {
-      "name": "Log Workout",
-      "short_name": "Log",
-      "description": "Quickly log a new workout",
-      "url": "/workout-log/?mode=log",
-      "icons": []
-    },
-    {
-      "name": "View History",
-      "short_name": "History",
-      "description": "See your workout history",
-      "url": "/workout-log/?mode=history",
-      "icons": []
-    }
-  ]
-}
+    // other scripts...
+  </script>
+</body>
+</html>
