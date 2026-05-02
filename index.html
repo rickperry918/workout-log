@@ -1720,7 +1720,6 @@
       return String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
     }
 
-    function importStepsCsvText(text) {
     function buildDashboardRows() {
       const data = load();
       const headers = [
@@ -1890,6 +1889,8 @@
         alert('Sync failed. Check your Web App URL and deployment permissions.');
       }
     }
+
+    function importStepsCsvText(text) {
       const lines = text.split(/\r?\n/).filter(line => line.trim());
       if (lines.length < 2) {
         alert('CSV file looks empty.');
