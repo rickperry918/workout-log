@@ -788,6 +788,8 @@
           <div class="tool-buttons">
             <button class="secondary" type="button" id="useToday">Use Today</button>
             <button class="secondary" type="button" id="importStepsCsv">Import Steps CSV</button>
+            <button class="secondary" type="button" id="setSheetUrl">Set Google Sheet Sync URL</button>
+            <button class="primary" type="button" id="syncGoogleSheet">Sync to Google Sheets</button>
             <button class="primary" type="button" id="exportCsv">Export Dashboard CSV</button>
             <button class="danger" type="button" id="clearBlank">Delete Blank Entries</button>
             <button class="danger" type="button" id="clearToday">Delete Today's Entries</button>
@@ -857,6 +859,7 @@
     const KEY = 'tracker';
     const DRAFT_KEY = 'trackerDraft';
     const CYCLE_KEY = 'trackerCycleState';
+    const SHEET_WEBAPP_KEY = 'trackerGoogleSheetWebAppUrl';
 
     const WORKOUT_TYPES = ['Performance', 'Push', 'Movement / Engine', 'Legs', 'Recovery', 'Light Arms', 'Pull', 'Light / Off', 'Custom'];
     const METABOLIC_WORKOUT_TYPES = ['Performance', 'Push', 'Movement / Engine', 'Legs', 'Light Arms', 'Pull'];
@@ -1718,6 +1721,175 @@
     }
 
     function importStepsCsvText(text) {
+    function buildDashboardRows() {
+      const data = load();
+      const headers = [
+        'Row Type',
+        'Date',
+        'Day',
+        'Workout Type',
+        'Exercise',
+        'Top Set',
+        'Set 1 Weight',
+        'Set 1 Reps',
+        'Set 2 Weight',
+        'Set 2 Reps',
+        'Set 3 Weight',
+        'Set 3 Reps',
+        'Set 4 Weight',
+        'Set 4 Reps',
+        'Duration (min)',
+        'Distance',
+        'Notes',
+        'Body Weight (lb)',
+        'Waist (in)',
+        'Pre Glucose',
+        'Post Glucose',
+        'Steps',
+        'Fatigue'
+      ];
+
+      const workoutRows = data
+        .filter(d => !d.steps)
+        .map(d => {
+          const topSet = (d.s1w || d.s1r) ? `${d.s1w || '—'}${d.s1w ? ' lb' : ''} × ${d.s1r || '—'}` : '';
+          return [
+            'Workout',
+            d.date,
+            d.day,
+            d.type,
+            d.ex,
+            topSet,
+            d.s1w,
+            d.s1r,
+            d.s2w,
+            d.s2r,
+            d.s3w,
+            d.s3r,
+            d.s4w,
+            d.s4r,
+            d.du,
+            d.di,
+            d.n,
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''
+          ];
+        });
+
+      const metricsByDate = new Map();
+
+      [...data].forEach(d => {
+        if (!d.date) return;
+
+        if (!metricsByDate.has(d.date)) {
+          metricsByDate.set(d.date, {
+            date: d.date,
+            day: d.day || 'Off Day',
+            bw: '',
+            wa: '',
+            gpre: '',
+            gpost: '',
+            steps: '',
+            fatigue: '',
+            notes: ''
+          });
+        }
+
+        const current = metricsByDate.get(d.date);
+
+        if (d.day) current.day = d.day;
+        if (d.bw) current.bw = d.bw;
+        if (d.wa) current.wa = d.wa;
+        if (d.gpre) current.gpre = d.gpre;
+        if (d.gpost) current.gpost = d.gpost;
+        if (d.steps) current.steps = d.steps;
+        if (d.fatigue) current.fatigue = d.fatigue;
+        if (d.n) current.notes = d.n;
+      });
+
+      const metricRows = [...metricsByDate.values()]
+        .filter(d => d.bw || d.wa || d.gpre || d.gpost || d.steps || d.fatigue)
+        .sort((a, b) => String(a.date).localeCompare(String(b.date)))
+        .map(d => [
+          'Daily Metrics',
+          d.date,
+          d.day,
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          d.notes,
+          d.bw,
+          d.wa,
+          d.gpre,
+          d.gpost,
+          d.steps,
+          d.fatigue
+        ]);
+
+      return [headers, ...workoutRows, ...metricRows];
+    }
+
+    function getSheetWebAppUrl() {
+      return localStorage.getItem(SHEET_WEBAPP_KEY) || '';
+    }
+
+    function setSheetWebAppUrl() {
+      const current = getSheetWebAppUrl();
+      const next = window.prompt('Paste your Google Apps Script Web App URL:', current);
+      if (next === null) return;
+      const trimmed = next.trim();
+      if (!trimmed) {
+        localStorage.removeItem(SHEET_WEBAPP_KEY);
+        alert('Google Sheet sync URL cleared.');
+        return;
+      }
+      localStorage.setItem(SHEET_WEBAPP_KEY, trimmed);
+      alert('Google Sheet sync URL saved.');
+    }
+
+    async function syncToGoogleSheets() {
+      const url = getSheetWebAppUrl();
+      if (!url) {
+        alert('Set your Google Sheet Sync URL first.');
+        setSheetWebAppUrl();
+        return;
+      }
+
+      const rows = buildDashboardRows();
+      if (rows.length <= 1) {
+        alert('No entries to sync yet.');
+        return;
+      }
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify({ rows })
+        });
+        alert('Sync sent to Google Sheets. Open your sheet to confirm rows updated.');
+      } catch (error) {
+        console.error(error);
+        alert('Sync failed. Check your Web App URL and deployment permissions.');
+      }
+    }
       const lines = text.split(/\r?\n/).filter(line => line.trim());
       if (lines.length < 2) {
         alert('CSV file looks empty.');
@@ -1945,6 +2117,8 @@
       dateEl.value = todayString();
       refreshMetabolicDashboard();
     });
+    document.getElementById('setSheetUrl').addEventListener('click', setSheetWebAppUrl);
+    document.getElementById('syncGoogleSheet').addEventListener('click', syncToGoogleSheets);
 
 
 
