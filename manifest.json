@@ -2,8 +2,8 @@
   "name": "Workout Tracker",
   "short_name": "Workouts",
   "description": "Flexible workout logging for your shift schedule. Track strength, cardio, recovery, and more.",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#0f172a",
@@ -36,14 +36,14 @@
       "name": "Log Workout",
       "short_name": "Log",
       "description": "Quickly log a new workout",
-      "url": "/?mode=log",
+      "url": "./?mode=log",
       "icons": []
     },
     {
       "name": "View History",
       "short_name": "History",
       "description": "See your workout history",
-      "url": "/?mode=history",
+      "url": "./?mode=history",
       "icons": []
     }
   ]
