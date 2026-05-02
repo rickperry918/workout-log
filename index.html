@@ -7,6 +7,18 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>Workout Log</title>
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- iOS Web App Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Workouts">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%230f172a' width='180' height='180'/><circle cx='90' cy='90' r='65' fill='%2322c55e'/><text x='90' y='105' font-size='55' font-weight='bold' text-anchor='middle' fill='%23052e16'>W</text></svg>">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#22c55e">
   <style>
     :root {
       --bg: #0f172a;
@@ -549,7 +561,7 @@
 <body>
   <div class="app">
     <div class="hero">
-      <h1>Workout Tracker</h1>
+      <h1>Workout Tracker v2</h1>
       <p class="subtext">Flexible logging for your shift schedule. Pick any day, any workout type, and save strength work, circuits, bike rides, recovery, or custom sessions fast.</p>
       <div class="stats">
         <div class="stat">
@@ -618,11 +630,11 @@
             <div class="meta-grid" style="margin-top: 10px;">
               <div class="meta-box">
                 <div class="meta-label">Current Day</div>
-                <div class="meta-value" id="cycleCurrent">Day 1 Push (Bench Press)</div>
+                <div class="meta-value" id="cycleCurrent">Day 1 · Performance (Leg Extension)</div>
               </div>
               <div class="meta-box">
                 <div class="meta-label">Next Day</div>
-                <div class="meta-value" id="cycleNext">Day 2 Pull (Assisted Pull-Ups)</div>
+                <div class="meta-value" id="cycleNext">Day 2 · Push (Bench Press)</div>
               </div>
             </div>
             <div class="cycle-grid" id="cycleGrid"></div>
@@ -635,13 +647,14 @@
 
           <h3 style="margin-top:14px;">Workout Type</h3>
           <div class="button-grid-3" id="workoutButtons">
-            <button class="preset-btn" type="button" onclick="presetWorkout('Push','Bench Press', this);">Push<small>Strength press day</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Pull','Assisted Pull-Ups', this);">Pull<small>Rows / pull-up work</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Legs','Squat', this);">Legs<small>Controlled lower work</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Upper Hypertrophy','Incline DB Press', this);">Upper Hypertrophy<small>Pump, not failure</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Performance','Leg Extension', this);">Performance<small>Hard, repeatable work</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Push','Bench Press', this);">Push<small>Press strength</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Movement / Engine','Loaded Step-Up', this);">Movement / Engine<small>Step-ups / bike / carry</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Legs','Squat', this);">Legs<small>Lower strength</small></button>
             <button class="preset-btn" type="button" onclick="presetWorkout('Recovery','Walk', this);">Recovery<small>Walk / mobility / easy day</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Cardio','Zone 2 Bike', this);">Zone 2 Cardio<small>Bike / walk / easy pace</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Circuit','Kettlebell Swings', this);">Circuit<small>Optional conditioning</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Light Arms','Rope Pushdown', this);">Light Arms<small>Pump only</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Pull','Barbell Rows', this);">Pull<small>Rows / pull-up work</small></button>
+            <button class="preset-btn" type="button" onclick="presetWorkout('Light / Off','', this);">Light / Off<small>Rest or easy work</small></button>
             <button class="preset-btn active" type="button" onclick="presetWorkout('Custom','', this);">Custom<small>Anything you want</small></button>
           </div>
         </div>
@@ -666,13 +679,14 @@
               <div>
                 <label for="type">Workout Type</label>
                 <select id="type">
+                  <option>Performance</option>
                   <option>Push</option>
-                  <option>Pull</option>
+                  <option>Movement / Engine</option>
                   <option>Legs</option>
-                  <option>Upper Hypertrophy</option>
-                  <option>Cardio</option>
                   <option>Recovery</option>
-                  <option>Circuit</option>
+                  <option>Light Arms</option>
+                  <option>Pull</option>
+                  <option>Light / Off</option>
                   <option selected>Custom</option>
                 </select>
               </div>
@@ -699,16 +713,24 @@
                   <option value="Deadlift"></option>
                   <option value="Weighted Pull-Ups"></option>
                   <option value="Assisted Pull-Ups"></option>
+                  <option value="Pull-Ups or Assisted Pull-Ups"></option>
                   <option value="Lat Pulldown"></option>
                   <option value="Barbell Rows"></option>
                   <option value="Single Arm DB Row"></option>
                   <option value="Seated Cable Row"></option>
+                  <option value="Face Pull"></option>
                   <option value="Face Pulls"></option>
                   <option value="Barbell Curls"></option>
+                  <option value="Incline DB Curl"></option>
                   <option value="Incline DB Curls"></option>
+                  <option value="Hammer Curl"></option>
                   <option value="Hammer Curls"></option>
                   <option value="EZ Bar Curl"></option>
+                  <option value="EZ Bar or DB Curl"></option>
+                  <option value="EZ/Cable Curl"></option>
                   <option value="Skull Crushers"></option>
+                  <option value="Rope Pushdown"></option>
+                  <option value="Neutral Grip Pushdown"></option>
                   <option value="Triceps Pushdown"></option>
                   <option value="Overhead Triceps Extension"></option>
                   <option value="Chest Fly"></option>
@@ -725,12 +747,20 @@
                   <option value="Weighted Decline Sit-Ups"></option>
                   <option value="Captain's Chair"></option>
                   <option value="Kettlebell Swings"></option>
+                  <option value="Circuit"></option>
                   <option value="Sled Push"></option>
+                  <option value="Sled Drag"></option>
+                  <option value="Sled Push or Drag"></option>
                   <option value="Battle Ropes"></option>
                   <option value="Farmer Carry"></option>
                   <option value="Sandbag Carry"></option>
                   <option value="Loaded Step-Up"></option>
+                  <option value="Step-Ups"></option>
+                  <option value="Bodyweight Squat"></option>
+                  <option value="Push-Up"></option>
                   <option value="Box Jumps"></option>
+                  <option value="Bike Intervals"></option>
+                  <option value="Overhead Kettlebell Carry"></option>
                   <option value="Stationary Bike"></option>
                   <option value="Zone 2 Bike"></option>
                   <option value="Walk"></option>
@@ -846,13 +876,14 @@
               <label for="filterType">Type</label>
               <select id="filterType">
                 <option value="">All</option>
+                <option>Performance</option>
                 <option>Push</option>
-                <option>Pull</option>
+                <option>Movement / Engine</option>
                 <option>Legs</option>
-                <option>Upper Hypertrophy</option>
-                <option>Circuit</option>
-                <option>Cardio</option>
                 <option>Recovery</option>
+                <option>Light Arms</option>
+                <option>Pull</option>
+                <option>Light / Off</option>
                 <option>Custom</option>
               </select>
             </div>
@@ -877,15 +908,19 @@
     const DRAFT_KEY = 'trackerDraft';
     const CYCLE_KEY = 'trackerCycleState';
 
+    const WORKOUT_TYPES = ['Performance', 'Push', 'Movement / Engine', 'Legs', 'Recovery', 'Light Arms', 'Pull', 'Light / Off', 'Custom'];
+    const METABOLIC_WORKOUT_TYPES = ['Performance', 'Push', 'Movement / Engine', 'Legs', 'Light Arms', 'Pull'];
+    const CARDIO_EXERCISES = ['Walk', 'Recovery Walk', 'Zone 2 Bike', 'Stationary Bike'];
+
     const EIGHT_DAY_CYCLE = [
-      { label: 'Day 1', type: 'Push', exercise: 'Bench Press' },
-      { label: 'Day 2', type: 'Pull', exercise: 'Assisted Pull-Ups' },
-      { label: 'Day 3', type: 'Legs', exercise: 'Squat' },
-      { label: 'Day 4', type: 'Recovery', exercise: 'Walk' },
-      { label: 'Day 5', type: 'Upper Hypertrophy', exercise: 'Incline DB Press' },
-      { label: 'Day 6', type: 'Cardio', exercise: 'Zone 2 Bike' },
-      { label: 'Day 7', type: 'Recovery', exercise: 'Walk' },
-      { label: 'Day 8', type: 'Custom', exercise: '' }
+      { label: 'Day 1', title: 'Performance', type: 'Performance', exercise: 'Leg Extension' },
+      { label: 'Day 2', title: 'Push', type: 'Push', exercise: 'Bench Press' },
+      { label: 'Day 3', title: 'Movement / Engine', type: 'Movement / Engine', exercise: 'Loaded Step-Up' },
+      { label: 'Day 4', title: 'Legs', type: 'Legs', exercise: 'Squat' },
+      { label: 'Day 5', title: 'Recovery', type: 'Recovery', exercise: 'Walk' },
+      { label: 'Day 6', title: 'Light Arms', type: 'Light Arms', exercise: 'Rope Pushdown' },
+      { label: 'Day 7', title: 'Pull', type: 'Pull', exercise: 'Barbell Rows' },
+      { label: 'Day 8', title: 'Light / Off', type: 'Light / Off', exercise: '' }
     ];
 
     const USER_GOALS = {
@@ -908,7 +943,7 @@
 
       if (type === 'Legs') {
         targets.carbs = USER_GOALS.legsCarbs;
-      } else if (type === 'Push' || type === 'Pull' || type === 'Upper Hypertrophy' || type === 'Circuit' || type === 'Cardio' || hasWorkout) {
+      } else if (METABOLIC_WORKOUT_TYPES.includes(type) || hasWorkout) {
         targets.carbs = USER_GOALS.trainingCarbs;
       } else if (type === 'Recovery') {
         targets.carbs = USER_GOALS.recoveryCarbs;
@@ -922,7 +957,7 @@
         targets.advice = 'Leg day: Higher carbs for performance and recovery. Put most carbs around training.';
       } else if (type === 'Recovery') {
         targets.advice = 'Recovery day: Moderate carbs support recovery. Walk after meals and keep food quality high.';
-      } else if (type === 'Push' || type === 'Pull' || type === 'Upper Hypertrophy' || type === 'Circuit' || type === 'Cardio' || hasWorkout) {
+      } else if (METABOLIC_WORKOUT_TYPES.includes(type) || hasWorkout) {
         targets.advice = 'Training day: Fuel performance with carbs around the workout and keep protein high.';
       } else if (shiftType === 'AM Shift') {
         targets.advice = 'AM Shift: Active work day. Moderate carbs fit your step count and recovery needs.';
@@ -941,11 +976,11 @@
       const entriesForDate = data.filter(d => d.date === selectedDate);
       const hasWorkoutEntry = entriesForDate.some(d => {
         if (d.ex === 'Imported Steps') return false;
-        return d.type === 'Push' || d.type === 'Pull' || d.type === 'Legs' || d.type === 'Upper Hypertrophy' || d.type === 'Circuit' || d.type === 'Cardio';
+        return METABOLIC_WORKOUT_TYPES.includes(d.type);
       });
       
       const typeElVal = document.getElementById('type')?.value;
-      const hasWorkout = hasWorkoutEntry || (typeElVal && ['Push', 'Pull', 'Legs', 'Upper Hypertrophy', 'Circuit', 'Cardio'].includes(typeElVal));
+      const hasWorkout = hasWorkoutEntry || (typeElVal && METABOLIC_WORKOUT_TYPES.includes(typeElVal));
       const shiftType = document.getElementById('day')?.value || 'Off Day';
 
       const targets = calculateDailyTargets(hasWorkout, shiftType, typeElVal);
@@ -960,71 +995,73 @@
     }
 
     const exerciseMap = {
-      Push: ['Bench Press', 'Incline DB Press', 'Overhead Press', 'Lateral Raises', 'Triceps Pushdown'],
-      Pull: ['Assisted Pull-Ups', 'Barbell Rows', 'Single Arm DB Row', 'Face Pulls', 'Barbell Curls'],
-      Legs: ['Squat', 'Romanian Deadlift', 'Walking Lunges', 'Leg Extension', 'Leg Curl', 'Standing Calf Raises'],
-      'Upper Hypertrophy': ['Incline DB Press', 'Machine Chest Press', 'DB Shoulder Press', 'Lateral Raises', 'Lat Pulldown', 'Seated Cable Row', 'EZ Bar Curl', 'Triceps Pushdown'],
-      Circuit: ['Kettlebell Swings', 'Sled Push', 'Battle Ropes', 'Farmer Carry', 'Sandbag Carry', 'Loaded Step-Up', 'Box Jumps'],
-      Cardio: ['Zone 2 Bike', 'Stationary Bike', 'Walk'],
+      Performance: ['Leg Extension', 'Loaded Step-Up', 'Sled Push', 'Sled Drag', 'Bodyweight Squat', 'Push-Up'],
+      Push: ['Bench Press', 'Overhead Press', 'Incline DB Press', 'Lateral Raises', 'Rope Pushdown', 'Neutral Grip Pushdown', 'Farmer Carry'],
+      'Movement / Engine': ['Loaded Step-Up', 'Zone 2 Bike', 'Stationary Bike', 'Overhead Kettlebell Carry', 'Mobility'],
+      Legs: ['Squat', 'Romanian Deadlift', 'Leg Extension', 'Walking Lunges', 'Leg Curl', 'Standing Calf Raises'],
       Recovery: ['Walk', 'Recovery Walk', 'Mobility'],
-      Custom: ['Bench Press', 'Assisted Pull-Ups', 'Squat', 'Incline DB Press', 'Zone 2 Bike', 'Walk']
+      'Light Arms': ['Rope Pushdown', 'Neutral Grip Pushdown', 'EZ Bar or DB Curl', 'Hammer Curl'],
+      Pull: ['Barbell Rows', 'Pull-Ups or Assisted Pull-Ups', 'Incline DB Curl', 'Hammer Curl', 'EZ/Cable Curl', 'Face Pull'],
+      'Light / Off': ['Zone 2 Bike', 'Walk', 'Mobility'],
+      Custom: ['Bench Press', 'Barbell Rows', 'Squat', 'Leg Extension', 'Zone 2 Bike', 'Walk']
     };
 
     const workoutTemplates = {
-      Push: [
-        '1. Bench Press — 4-5 × 3-5',
-        '2. Incline DB Press — 3 × 6-8',
-        '3. Overhead Press — 3 × 5-8',
-        '4. Lateral Raises — 3 × 12-15',
-        '5. Triceps — 2-3 sets',
-        '6. Note — Stop 1-2 reps before failure'
+      Performance: [
+        '1. Leg Extension — 2 × 15 slow activation',
+        '2. Step-Ups — 8 rounds, 45 sec work / 75-90 sec rest',
+        '3. Sled Push or Drag — 6-8 rounds, 20-30m',
+        '4. Circuit — 3 rounds: squats 45 sec, push-ups 30 sec, plank/dead bug 30-45 sec',
+        '5. Note — hard but repeatable, do not chase exhaustion'
       ],
-      Pull: [
-        '1. Assisted Pull-Ups — 4 sets',
-        '2. Barbell Rows — 4 × 5-8',
-        '3. Single Arm DB Row — 3 × 8-10',
-        '4. Face Pulls — 3 × 12-15',
-        '5. Curls — 2-3 sets',
-        '6. Note — Focus on strong form and skill work'
+      Push: [
+        '1. Bench Press — 4 × 4-6',
+        '2. Overhead Press — 3 × 4-6',
+        '3. Incline DB Press — 3 × 6-8',
+        '4. Lateral Raises — 3 × 12-15',
+        '5. Rope Pushdown — 3 × 10-12',
+        '6. Neutral Grip Pushdown — optional 2 × 8-10',
+        '7. Farmer Carry — 4 rounds, 40-60 sec'
+      ],
+      'Movement / Engine': [
+        '1. Step-Ups — 6 rounds, 45 sec work / 75 sec rest',
+        '2. Bike Intervals — 6-8 rounds, 30 sec moderate-hard / 90 sec easy',
+        '3. Overhead Kettlebell Carry — 3-4 rounds, 30-40 sec each arm',
+        '4. Optional Mobility — 5-10 min hips and ankles'
       ],
       Legs: [
-        '1. Squat — 4 × 3-6',
+        '1. Squat — 4 × 4-6',
         '2. Romanian Deadlift — 3 × 6-8',
-        '3. Walking Lunges — 2 controlled sets',
-        '4. Leg Extension — 3 × 10-15',
-        '5. Leg Curl — 2-3 sets',
-        '6. Standing Calf Raises — 4-5 × 10-20',
-        '7. Note — Control volume, no annihilation sets'
-      ],
-      'Upper Hypertrophy': [
-        '1. Incline DB Press — 3 × 8-12',
-        '2. Machine Chest Press — 2-3 × 10-12',
-        '3. DB Shoulder Press — 3 × 8-12',
-        '4. Lateral Raises — 4 × 12-15',
-        '5. Lat Pulldown — 3 × 8-12',
-        '6. Seated Cable Row — 2-3 × 10-12',
-        '7. EZ Bar Curl — 2-3 × 10-12',
-        '8. Triceps Pushdown — 2-3 × 10-12',
-        '9. Note — Pump day, not to failure'
-      ],
-      Circuit: [
-        '1. Kettlebell Swings — 30-45 sec',
-        '2. Sled Push — 30-45 sec',
-        '3. Battle Ropes — 30-45 sec',
-        '4. Farmer Carry or Sandbag Carry — 2-3 rounds',
-        '5. Loaded Step-Up or Box Jumps — 3 × 8-10',
-        '6. Note — Optional conditioning only'
-      ],
-      Cardio: [
-        '1. Zone 2 Bike or Walk — 20-45 min',
-        '2. Easy pace, nasal-breathing effort',
-        '3. Note — Recover while building conditioning'
+        '3. Leg Extension — 3 × 12-15 slow, 1-2 sec squeeze',
+        '4. Walking Lunges — 3 × 10 each leg',
+        '5. Leg Curl — 3 × 10-12',
+        '6. Optional Calves — 2-3 × 12-15'
       ],
       Recovery: [
-        '1. Walk — 20-45 min easy effort',
-        '2. Mobility — 10-15 min',
-        '3. Optional light pump work — 1-2 easy sets',
-        '4. Note — Restore, do not push'
+        '1. Walk — 20-30 min easy pace',
+        '2. Mobility — 10-15 min hips, ankles, T-spine',
+        '3. Optional light activation only if stiff'
+      ],
+      'Light Arms': [
+        '1. Rope Pushdown — 2-3 × 12-15',
+        '2. Neutral Grip Pushdown — 2 × 10-12',
+        '3. EZ Bar or DB Curl — 2-3 × 10-12',
+        '4. Hammer Curl — 2 × 12',
+        '5. Note — pump only, no cardio, stop 1-2 reps before failure'
+      ],
+      Pull: [
+        '1. Barbell Rows — 4 × 5-8',
+        '2. Pull-Ups or Assisted Pull-Ups — 4 × 5-8',
+        '3. Incline DB Curl — 2 × 12-15',
+        '4. Hammer Curl — 3 × 10-12',
+        '5. EZ/Cable Curl — 3 × 8-10',
+        '6. Face Pull — 2-3 × 12-15'
+      ],
+      'Light / Off': [
+        '1. Full rest if tired',
+        '2. Optional Zone 2 Bike — 15-25 min easy',
+        '3. Optional Walk — easy pace',
+        '4. Do not turn this into a hard workout'
       ],
       Custom: [
         'Pick the exercises you need today.',
@@ -1049,7 +1086,7 @@
     const setLoggingWrapEl = document.getElementById('setLoggingWrap');
     function updateConditionalFields(type) {
       const exercise = (exerciseEl?.value || '').trim();
-      const isCardioSession = type === 'Cardio' || exercise === 'Stationary Bike' || exercise === 'Zone 2 Bike';
+      const isCardioSession = CARDIO_EXERCISES.includes(exercise);
 
       durationWrapEl.classList.toggle('hidden', !isCardioSession);
       distanceWrapEl.classList.toggle('hidden', !isCardioSession);
@@ -1135,26 +1172,28 @@
     const stepsCsvFileEl = document.getElementById('stepsCsvFile');
     function getExerciseRecommendations() {
       return {
-        'Bench Press': { sets: 5, reps: '3-5' },
-        'Overhead Press': { sets: 3, reps: '5-8' },
-        'Incline DB Press': { sets: 3, reps: '8-12' },
+        'Bench Press': { sets: 4, reps: '4-6' },
+        'Overhead Press': { sets: 3, reps: '4-6' },
+        'Incline DB Press': { sets: 3, reps: '6-8' },
         'Machine Chest Press': { sets: 3, reps: '10-12' },
         'Cable Chest Press': { sets: 3, reps: '10-15' },
         'Deadlift': { sets: 4, reps: '3-5' },
         'Weighted Pull-Ups': { sets: 3, reps: '4-6' },
-        'Assisted Pull-Ups': { sets: 4, reps: '6-8' },
+        'Assisted Pull-Ups': { sets: 4, reps: '5-8' },
+        'Pull-Ups or Assisted Pull-Ups': { sets: 4, reps: '5-8' },
         'Lat Pulldown': { sets: 3, reps: '8-12' },
         'Barbell Rows': { sets: 4, reps: '5-8' },
         'Single Arm DB Row': { sets: 3, reps: '8-10' },
         'Seated Cable Row': { sets: 3, reps: '10-12' },
+        'Face Pull': { sets: 3, reps: '12-15' },
         'Face Pulls': { sets: 3, reps: '12-15' },
-        'Squat': { sets: 4, reps: '3-6' },
+        'Squat': { sets: 4, reps: '4-6' },
         'Romanian Deadlift': { sets: 3, reps: '6-8' },
         'Hip Thrust': { sets: 3, reps: '8-12' },
-        'Walking Lunges': { sets: 2, reps: '10-12' },
+        'Walking Lunges': { sets: 3, reps: '10 each leg' },
         'Leg Curl': { sets: 3, reps: '10-12' },
-        'Leg Extension': { sets: 3, reps: '10-15' },
-        'Standing Calf Raises': { sets: 5, reps: '10-20' },
+        'Leg Extension': { sets: 3, reps: '12-15' },
+        'Standing Calf Raises': { sets: 3, reps: '12-15' },
         'Weighted Decline Sit-Ups': { sets: 4, reps: '8-12' },
         'DB Shoulder Press': { sets: 3, reps: '8-12' },
         'Lateral Raises': { sets: 4, reps: '12-15' },
@@ -1162,17 +1201,31 @@
         'Rear Delt Fly': { sets: 3, reps: '12-20' },
         'Kettlebell Swings': { sets: 3, reps: '15' },
         'Sled Push': { sets: 4, reps: '30 sec' },
+        'Sled Drag': { sets: 6, reps: '20-30m' },
+        'Sled Push or Drag': { sets: 6, reps: '20-30m' },
         'Battle Ropes': { sets: 4, reps: '30 sec' },
-        'Farmer Carry': { sets: 3, reps: '40 yd' },
+        'Farmer Carry': { sets: 4, reps: '40-60 sec' },
         'Sandbag Carry': { sets: 3, reps: '40 yd' },
-        'Loaded Step-Up': { sets: 3, reps: '8-10' },
+        'Loaded Step-Up': { sets: 6, reps: '45 sec' },
+        'Step-Ups': { sets: 6, reps: '45 sec' },
+        'Bodyweight Squat': { sets: 3, reps: '45 sec' },
+        'Push-Up': { sets: 3, reps: '30 sec' },
         'Box Jumps': { sets: 3, reps: '8-10' },
+        'Bike Intervals': { sets: 8, reps: '30 sec / 90 sec easy' },
+        'Overhead Kettlebell Carry': { sets: 4, reps: '30-40 sec/arm' },
+        'Circuit': { sets: 3, reps: 'squats / push-ups / core' },
         'Skull Crushers': { sets: 3, reps: '10-12' },
+        'Rope Pushdown': { sets: 3, reps: '10-15' },
+        'Neutral Grip Pushdown': { sets: 2, reps: '10-12' },
         'Triceps Pushdown': { sets: 3, reps: '10-12' },
         'Overhead Triceps Extension': { sets: 3, reps: '10-12' },
+        'Incline DB Curl': { sets: 2, reps: '12-15' },
         'Incline DB Curls': { sets: 3, reps: '10-12' },
+        'Hammer Curl': { sets: 3, reps: '10-12' },
         'Hammer Curls': { sets: 3, reps: '10-12' },
         'EZ Bar Curl': { sets: 3, reps: '10-12' },
+        'EZ Bar or DB Curl': { sets: 3, reps: '10-12' },
+        'EZ/Cable Curl': { sets: 3, reps: '8-10' },
         'Cable Crunch': { sets: 3, reps: '12-15' },
         'Hanging Knee Raise': { sets: 3, reps: '10-15' },
         "Captain's Chair": { sets: 3, reps: '10-15' },
@@ -1194,6 +1247,97 @@
       }
     }
 
+    function getExerciseProgressionType(exercise) {
+      const name = (exercise || '').trim();
+      const strengthExercises = [
+        'Bench Press',
+        'Overhead Press',
+        'Squat',
+        'Romanian Deadlift',
+        'Barbell Rows',
+        'Pull-Ups',
+        'Pull-Ups or Assisted Pull-Ups',
+        'Assisted Pull-Ups',
+        'Weighted Pull-Ups'
+      ];
+      const armExercises = [
+        'Rope Pushdown',
+        'Neutral Grip Pushdown',
+        'EZ Bar Curl',
+        'EZ Bar or DB Curl',
+        'EZ/Cable Curl',
+        'DB Curl',
+        'Hammer Curl',
+        'Hammer Curls',
+        'Incline DB Curl',
+        'Incline DB Curls'
+      ];
+      const performanceExercises = [
+        'Loaded Step-Up',
+        'Sled Push',
+        'Sled Drag',
+        'Sled Push or Drag',
+        'Overhead Kettlebell Carry',
+        'Farmer Carry'
+      ];
+
+      if (strengthExercises.includes(name)) return 'strength';
+      if (armExercises.includes(name)) return 'arms';
+      if (performanceExercises.includes(name)) return 'performance';
+      return 'general';
+    }
+
+    function getProgressionSuggestion(exercise, lastWeight, lastReps) {
+      const name = (exercise || '').trim();
+      const type = getExerciseProgressionType(name);
+      const recommendations = getExerciseRecommendations();
+      const repNumbers = String(recommendations[name]?.reps || '').match(/\d+(?:\.\d+)?/g);
+      const topRepTarget = repNumbers ? Number(repNumbers[repNumbers.length - 1]) : null;
+      const lastEntry = [...load()].reverse().find(d => d.ex === name);
+      const loggedReps = lastEntry
+        ? [lastEntry.s1r, lastEntry.s2r, lastEntry.s3r, lastEntry.s4r]
+            .filter(reps => String(reps || '').trim())
+            .map(reps => {
+              const match = String(reps).match(/\d+(?:\.\d+)?/);
+              return match ? Number(match[0]) : null;
+            })
+        : [];
+      const expectedSets = Math.min(Number(recommendations[name]?.sets) || loggedReps.length, 4);
+      const allSetsHitTop = !!topRepTarget &&
+        loggedReps.length >= expectedSets &&
+        loggedReps.every(reps => reps !== null && reps >= topRepTarget);
+      const weightNumber = Number(lastWeight);
+      const hasLoggedWeight = String(lastWeight || '').trim() !== '';
+
+      if (type === 'strength') {
+        if (allSetsHitTop && hasLoggedWeight && Number.isFinite(weightNumber)) {
+          return `Suggested next: ${weightNumber + 5} lb.`;
+        }
+        return 'Repeat the same weight and add reps next time.';
+      }
+
+      if (type === 'arms') {
+        if (allSetsHitTop && hasLoggedWeight && Number.isFinite(weightNumber)) {
+          return `All sets hit the top of the range. Add 2.5 lb next time.`;
+        }
+        return 'Add reps first before increasing weight.';
+      }
+
+      if (type === 'performance') {
+        if (name === 'Loaded Step-Up') {
+          return 'Keep pace consistent first, then add vest/load.';
+        }
+        if (name === 'Sled Push' || name === 'Sled Drag' || name === 'Sled Push or Drag') {
+          return 'Add one round OR a small load increase next time, not both.';
+        }
+        if (name === 'Overhead Kettlebell Carry' || name === 'Farmer Carry') {
+          return 'Add time first, then load.';
+        }
+      }
+
+      return 'Repeat or progress gradually based on form and readiness.';
+    }
+
     function updateExerciseHistory(exercise) {
       const name = (exercise || '').trim();
       if (!name) {
@@ -1210,10 +1354,8 @@
       }
 
       if (last.s1w || last.s1r) {
-        const suggested = last.s1w ? Number(last.s1w) + 5 : null;
-        exerciseHistoryEl.textContent = suggested
-          ? `Last top set: ${last.s1w} lb × ${last.s1r || '—'} on ${last.date}. Suggested next: ${suggested} lb.`
-          : `Last logged on ${last.date}.`;
+        const suggestion = getProgressionSuggestion(name, last.s1w, last.s1r);
+        exerciseHistoryEl.textContent = `Last top set: ${last.s1w || '—'} lb × ${last.s1r || '—'} on ${last.date}. ${suggestion}`;
         return;
       }
 
@@ -1295,18 +1437,20 @@
     function renderCyclePlanner() {
       const current = getCycleDay();
       const next = getCycleDay(1);
+      const currentTitle = current.title || current.type;
+      const nextTitle = next.title || next.type;
 
       if (cycleCurrentEl) {
-        cycleCurrentEl.textContent = `${current.label} · ${current.type}${current.exercise ? ` (${current.exercise})` : ''}`;
+        cycleCurrentEl.textContent = `${current.label} · ${currentTitle}${current.exercise ? ` (${current.exercise})` : ''}`;
       }
       if (cycleNextEl) {
-        cycleNextEl.textContent = `${next.label} · ${next.type}${next.exercise ? ` (${next.exercise})` : ''}`;
+        cycleNextEl.textContent = `${next.label} · ${nextTitle}${next.exercise ? ` (${next.exercise})` : ''}`;
       }
       if (cycleGridEl) {
         cycleGridEl.innerHTML = EIGHT_DAY_CYCLE.map((day, index) => `
           <div class="cycle-day${index === current.index ? ' active' : ''}" onclick="setCycleDay(${index}); return false;">
             <div class="cycle-day-label">${day.label}</div>
-            <div class="cycle-day-value">${escapeHtml(day.type)}${day.exercise ? `<br>${escapeHtml(day.exercise)}` : ''}</div>
+            <div class="cycle-day-value">${escapeHtml(day.title || day.type)}${day.exercise ? `<br>${escapeHtml(day.exercise)}` : ''}</div>
           </div>
         `).join('');
       }
@@ -1332,7 +1476,7 @@
     }
 
     function shouldAdvanceCycleForType(type) {
-      return ['Push', 'Pull', 'Legs', 'Upper Hypertrophy', 'Cardio', 'Recovery', 'Circuit', 'Custom'].includes(type);
+      return WORKOUT_TYPES.includes(type);
     }
 
     function getDraftFromForm() {
@@ -1493,25 +1637,27 @@
       updateExerciseHistory(exercise);
       updateSetHistory(exercise);
 
-      const fatigueDefault = type === 'Recovery' ? 'Beat Up' : 'Normal';
+      const fatigueDefault = type === 'Recovery' || type === 'Light / Off' ? 'Beat Up' : 'Normal';
       document.querySelectorAll('#fatigueChips .chip').forEach(chip => {
         chip.classList.toggle('active', chip.dataset.fatigue === fatigueDefault);
       });
 
-      if (type === 'Push') {
-        notesEl.value = 'Strength day. Stop 1-2 reps before failure.';
+      if (type === 'Performance') {
+        notesEl.value = 'Hard but repeatable. Do not chase exhaustion.';
+      } else if (type === 'Push') {
+        notesEl.value = 'Press strength day. Stop 1-2 reps before failure.';
+      } else if (type === 'Movement / Engine') {
+        notesEl.value = 'Movement and engine day. Keep intervals crisp and repeatable.';
       } else if (type === 'Pull') {
-        notesEl.value = 'Strength + skill day. Focus on clean pull-up work and stop short of failure.';
+        notesEl.value = 'Pull day. Focus on strong rows, clean pull-up work, and good curls.';
       } else if (type === 'Legs') {
-        notesEl.value = 'Controlled lower day. Keep volume in check and avoid annihilation sets.';
-      } else if (type === 'Upper Hypertrophy') {
-        notesEl.value = 'Pump day. Shorter rest, good contractions, not to failure.';
-      } else if (type === 'Cardio') {
-        notesEl.value = 'Zone 2 cardio session. Easy sustainable pace for conditioning.';
+        notesEl.value = 'Lower strength day. Controlled reps and clean volume.';
       } else if (type === 'Recovery') {
-        notesEl.value = 'Recovery day. Zone 2 walk and mobility only.';
-      } else if (type === 'Circuit') {
-        notesEl.value = 'Optional conditioning. Use only if recovery is good.';
+        notesEl.value = 'Recovery day. Easy walk and mobility only.';
+      } else if (type === 'Light Arms') {
+        notesEl.value = 'Pump only. No cardio, stop 1-2 reps before failure.';
+      } else if (type === 'Light / Off') {
+        notesEl.value = 'Rest if tired. Keep optional work easy.';
       }
 
       clearActive('workoutButtons');
@@ -2105,6 +2251,23 @@ chipsEl.addEventListener('click', (e) => {
     setupDraftAutosave();
     if (document.getElementById('cycleGrid')) renderCyclePlanner();
     render();
+  </script>
+
+  <!-- Development cache reset: disable stale PWA service worker while editing locally -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async () => {
+        try {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          for (const registration of registrations) {
+            await registration.unregister();
+          }
+          console.log('Service workers unregistered for local development cache reset.');
+        } catch (error) {
+          console.log('Service worker unregister failed:', error);
+        }
+      });
+    }
   </script>
 </body>
 </html>
