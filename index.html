@@ -634,7 +634,7 @@
               </div>
               <div class="meta-box">
                 <div class="meta-label">Next Day</div>
-                <div class="meta-value" id="cycleNext">Day 2 · Push (Bench Press)</div>
+                <div class="meta-value" id="cycleNext">Day 2 · Legs (Squat)</div>
               </div>
             </div>
             <div class="cycle-grid" id="cycleGrid"></div>
@@ -926,9 +926,9 @@
 
     const EIGHT_DAY_CYCLE = [
       { label: 'Day 1', title: 'Performance', type: 'Performance', exercise: 'Leg Extension' },
-      { label: 'Day 2', title: 'Push', type: 'Push', exercise: 'Bench Press' },
+      { label: 'Day 2', title: 'Legs', type: 'Legs', exercise: 'Squat' },
       { label: 'Day 3', title: 'Movement / Engine', type: 'Movement / Engine', exercise: 'Loaded Step-Up' },
-      { label: 'Day 4', title: 'Legs', type: 'Legs', exercise: 'Squat' },
+      { label: 'Day 4', title: 'Push', type: 'Push', exercise: 'Bench Press' },
       { label: 'Day 5', title: 'Recovery', type: 'Recovery', exercise: 'Walk' },
       { label: 'Day 6', title: 'Light Arms', type: 'Light Arms', exercise: 'Rope Pushdown' },
       { label: 'Day 7', title: 'Pull', type: 'Pull', exercise: 'Barbell Rows' },
@@ -2265,14 +2265,13 @@ chipsEl.addEventListener('click', (e) => {
     render();
   </script>
 
-  <!-- Development cache reset: disable stale PWA service worker while editing locally -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(registrations => {
-        registrations.forEach(reg => reg.unregister());
-      });
-    }
-  </script>
-
-  </body>
-  </html>
+<!-- Development cache reset: disable stale PWA service worker while editing locally -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      registrations.forEach(reg => reg.unregister());
+    });
+  }
+</script>
+</body>
+</html>
