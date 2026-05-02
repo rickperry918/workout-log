@@ -505,19 +505,7 @@
     }
 
     .sticky-bar {
-      position: fixed;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
-      z-index: 20;
-      display: none;
-      gap: 10px;
-      background: rgba(15, 23, 42, 0.92);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 10px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
+      display: none !important;
     }
 
     .sticky-bar button { flex: 1; }
@@ -537,11 +525,11 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .sticky-bar { display: flex; }
+      .sticky-bar { display: none !important; }
     }
 
     @media (max-width: 720px) {
-      body { padding: 10px; padding-bottom: 92px; }
+      body { padding: 10px; padding-bottom: 18px; }
       .form-grid,
       .button-grid-3,
       .button-grid-2 { grid-template-columns: 1fr; }
