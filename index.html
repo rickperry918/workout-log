@@ -602,53 +602,7 @@
 
     <div class="grid">
       <div class="stack">
-        <div class="card">
-          <h2>Quick Fill</h2>
-          <p class="section-note">Choose a day type first, then tap any workout. You are not locked into a fixed schedule.</p>
 
-          <h3>Day Type</h3>
-          <div class="button-grid-3" id="dayButtons">
-            <button class="preset-btn" type="button" onclick="setDayOnly('AM Shift', this);">AM Shift</button>
-            <button class="preset-btn" type="button" onclick="setDayOnly('PM Shift', this);">PM Shift</button>
-            <button class="preset-btn active" type="button" onclick="setDayOnly('Off Day', this);">Off Day</button>
-          </div>
-
-          <div style="margin-top:14px;">
-            <h3>8-Day Cycle</h3>
-            <div class="meta-grid" style="margin-top: 10px;">
-              <div class="meta-box">
-                <div class="meta-label">Current Day</div>
-                <div class="meta-value" id="cycleCurrent">Day 1 · Performance (Leg Extension)</div>
-              </div>
-              <div class="meta-box">
-                <div class="meta-label">Next Day</div>
-                <div class="meta-value" id="cycleNext">Day 2 · Legs (Squat)</div>
-              </div>
-            </div>
-            <div class="cycle-grid" id="cycleGrid"></div>
-            <div class="cycle-actions">
-              <button class="secondary" type="button" id="cycleApplyToday" onclick="applyCycleDayToForm(); return false;">Apply to Form</button>
-              <button class="primary" type="button" id="cycleAdvance" onclick="advanceCycleDay(); return false;">Advance Day</button>
-              <button class="secondary" type="button" id="cycleReset" onclick="resetCycleDay(); return false;">Reset to Day 1</button>
-            </div>
-          </div>
-
-          <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleWorkoutTypes()">
-            <h3 style="margin:0;">Workout Type (Manual Override)</h3>
-            <span id="workoutToggleIcon" style="color:var(--muted);">▼</span>
-          </div>
-          <div class="button-grid-3 hidden" id="workoutButtons">
-            <button class="preset-btn" type="button" onclick="presetWorkout('Performance','Leg Extension', this);">Performance<small>Hard, repeatable work</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Push','Bench Press', this);">Push<small>Press strength</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Movement / Engine','Loaded Step-Up', this);">Movement / Engine<small>Step-ups / bike / carry</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Legs','Squat', this);">Legs<small>Lower strength</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Recovery','Walk', this);">Recovery<small>Walk / mobility / easy day</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Light Arms','Rope Pushdown', this);">Light Arms<small>Pump only</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Pull','Barbell Rows', this);">Pull<small>Rows / pull-up work</small></button>
-            <button class="preset-btn" type="button" onclick="presetWorkout('Light / Off','', this);">Light / Off<small>Rest or easy work</small></button>
-            <button class="preset-btn active" type="button" onclick="presetWorkout('Custom','', this);">Custom<small>Anything you want</small></button>
-          </div>
-        </div>
 
         <div class="card">
           <h2>Add Entry</h2>
